@@ -322,9 +322,9 @@ The project follows an **Agile Scrum** methodology with incremental sprints:
 
 | | Name | Student ID | Role | GitHub |
 |---|---|---|---|---|
-| 👨‍💻 | **Muhammad Idrees** | i230721 | Team Lead & Backend Developer | [@code-with-idrees](https://github.com/code-with-idrees) |
-| 👨‍💻 | **Haris** | i230582 | Frontend Developer & UI/UX | — |
-| 👨‍💻 | **Farzeen** | i230814 | Database & Testing Engineer | — |
+| 👨‍💻 | **Muhammad Idrees** | i230582 | Team Lead , Product Owner & Developer | [@code-with-idrees](https://github.com/code-with-idrees) |
+| 👨‍💻 | **Haris** | i230814 | Scrum Master, Developer & Analyst | [@muhammad-haris2](https://github.com/muhammad-haris2) |
+| 👨‍💻 | **Farzeen** | i230721 | UI, Developer & Tester | [@farzeentareen](https://github.com/farzeentareen) |
 
 > **Section:** B  
 > **Course:** Software Engineering  
