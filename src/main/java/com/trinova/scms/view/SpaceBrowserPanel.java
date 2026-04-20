@@ -21,6 +21,14 @@ public class SpaceBrowserPanel extends JPanel {
     private JComboBox<String> filterCombo;
     private JLabel statusLabel;
 
+    // Booking form fields
+    private JTextField dateField;
+    private JTextField startField;
+    private JTextField endField;
+    private JComboBox<String> bookingTypeCombo;
+    private JPanel hourlyFields;
+    private JLabel bookingTypeNote;
+
     public SpaceBrowserPanel(Member member) {
         this.member = member;
         try {
@@ -36,7 +44,7 @@ public class SpaceBrowserPanel extends JPanel {
     }
 
     private void initComponents() {
-        // Top bar
+        // ── Top bar ────────────────────────────────────────
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(
@@ -47,24 +55,46 @@ public class SpaceBrowserPanel extends JPanel {
         titleLabel.setForeground(new Color(16, 64, 110));
         topPanel.add(titleLabel, BorderLayout.WEST);
 
-        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        // Plan info banner
+        String planInfo = member.hasActivePlan()
+            ? "Your Plan: " + member.getPlanType() +
+              " — expires " + member.getPlanExpiry()
+            : "No Plan — full rates apply";
+        JLabel planLabel = new JLabel(planInfo);
+        planLabel.setFont(
+            new Font("Segoe UI", Font.ITALIC, 12));
+        planLabel.setForeground(
+            member.hasActivePlan() ?
+            new Color(0, 128, 0) :
+            new Color(200, 100, 0));
+        topPanel.add(planLabel, BorderLayout.CENTER);
+
+        // Filter
+        JPanel filterPanel = new JPanel(
+            new FlowLayout(FlowLayout.RIGHT));
         filterPanel.setBackground(Color.WHITE);
         filterPanel.add(new JLabel("Filter: "));
         filterCombo = new JComboBox<>(new String[]{
-            "ALL", "HOT_DESK", "MEETING_ROOM", "PRIVATE_ROOM"});
-        filterCombo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        filterCombo.addActionListener(e ->
-            loadRooms((String) filterCombo.getSelectedItem()));
+            "ALL", "HOT_DESK",
+            "MEETING_ROOM", "PRIVATE_ROOM"});
+        filterCombo.setFont(
+            new Font("Segoe UI", Font.PLAIN, 13));
+        filterCombo.addActionListener(e -> {
+            loadRooms((String) filterCombo.getSelectedItem());
+            updateBookingForm(
+                (String) filterCombo.getSelectedItem());
+        });
         filterPanel.add(filterCombo);
 
         JButton refreshBtn = new JButton("Refresh");
         refreshBtn.addActionListener(e ->
-            loadRooms((String) filterCombo.getSelectedItem()));
+            loadRooms(
+                (String) filterCombo.getSelectedItem()));
         filterPanel.add(refreshBtn);
         topPanel.add(filterPanel, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
 
-        // Table
+        // ── Table ──────────────────────────────────────────
         String[] columns = {
             "ID", "Space Name", "Type",
             "Capacity", "Amenities", "Rate"};
@@ -89,80 +119,199 @@ public class SpaceBrowserPanel extends JPanel {
             BorderFactory.createEmptyBorder(0, 15, 0, 15));
         add(scrollPane, BorderLayout.CENTER);
 
-        // Bottom booking panel
+        // ── Bottom booking panel ───────────────────────────
+        add(buildBookingPanel(), BorderLayout.SOUTH);
+    }
+
+    private JPanel buildBookingPanel() {
         JPanel bottomPanel = new JPanel(new GridBagLayout());
         bottomPanel.setBackground(Color.WHITE);
-        bottomPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(
-                1, 0, 0, 0, Color.LIGHT_GRAY),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        bottomPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(
+                    1, 0, 0, 0, Color.LIGHT_GRAY),
+                BorderFactory.createEmptyBorder(
+                    15, 15, 15, 15)));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 8, 5, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Date
+        // Row 0: booking type selector
         gbc.gridx = 0; gbc.gridy = 0;
-        bottomPanel.add(new JLabel("Date (YYYY-MM-DD):"), gbc);
-        JTextField dateField = new JTextField(
-            LocalDate.now().toString(), 12);
+        bottomPanel.add(new JLabel("Booking Type:"), gbc);
+
+        bookingTypeCombo = new JComboBox<>(
+            new String[]{"HOURLY"});
+        bookingTypeCombo.setFont(
+            new Font("Segoe UI", Font.PLAIN, 13));
         gbc.gridx = 1;
-        bottomPanel.add(dateField, gbc);
+        bottomPanel.add(bookingTypeCombo, gbc);
 
-        // Start time
-        gbc.gridx = 2;
-        bottomPanel.add(new JLabel("Start (HH:MM):"), gbc);
-        JTextField startField = new JTextField("09:00", 8);
-        gbc.gridx = 3;
-        bottomPanel.add(startField, gbc);
+        bookingTypeNote = new JLabel(
+            "Select date and time below");
+        bookingTypeNote.setFont(
+            new Font("Segoe UI", Font.ITALIC, 11));
+        bookingTypeNote.setForeground(Color.GRAY);
+        gbc.gridx = 2; gbc.gridwidth = 3;
+        bottomPanel.add(bookingTypeNote, gbc);
+        gbc.gridwidth = 1;
 
-        // End time
-        gbc.gridx = 4;
-        bottomPanel.add(new JLabel("End (HH:MM):"), gbc);
-        JTextField endField = new JTextField("17:00", 8);
-        gbc.gridx = 5;
-        bottomPanel.add(endField, gbc);
+        // Row 1: hourly fields panel
+        hourlyFields = new JPanel(
+            new FlowLayout(FlowLayout.LEFT, 8, 0));
+        hourlyFields.setBackground(Color.WHITE);
 
-        // Status label
-        statusLabel = new JLabel(" ", SwingConstants.CENTER);
-        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 4;
+        hourlyFields.add(new JLabel("Date (YYYY-MM-DD):"));
+        dateField = new JTextField(
+            LocalDate.now().toString(), 12);
+        hourlyFields.add(dateField);
+
+        hourlyFields.add(new JLabel("  Start (HH:MM):"));
+        startField = new JTextField("09:00", 7);
+        hourlyFields.add(startField);
+
+        hourlyFields.add(new JLabel("  End (HH:MM):"));
+        endField = new JTextField("17:00", 7);
+        hourlyFields.add(endField);
+
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 6;
+        bottomPanel.add(hourlyFields, gbc);
+        gbc.gridwidth = 1;
+
+        // Row 2: status + book button
+        statusLabel = new JLabel(
+            " ", SwingConstants.LEFT);
+        statusLabel.setFont(
+            new Font("Segoe UI", Font.PLAIN, 12));
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 4;
         bottomPanel.add(statusLabel, gbc);
 
-        // Book button
-        JButton bookBtn = new JButton("Book Selected Space");
+        JButton bookBtn = new JButton(
+            "Book Selected Space →");
         bookBtn.setBackground(new Color(16, 64, 110));
         bookBtn.setForeground(Color.WHITE);
         bookBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
         bookBtn.setFocusPainted(false);
         bookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        gbc.gridx = 4; gbc.gridy = 1; gbc.gridwidth = 2;
+        bookBtn.setPreferredSize(new Dimension(200, 36));
+        gbc.gridx = 4; gbc.gridy = 2; gbc.gridwidth = 2;
         bottomPanel.add(bookBtn, gbc);
 
-        bookBtn.addActionListener(e -> {
-            int selectedRow = roomTable.getSelectedRow();
-            if (selectedRow == -1) {
-                statusLabel.setForeground(Color.RED);
-                statusLabel.setText(
-                    "Please select a space from the table.");
-                return;
-            }
+        // Booking type changes form
+        bookingTypeCombo.addActionListener(e ->
+            updateTimeFields());
 
-            int roomId = (int) tableModel.getValueAt(selectedRow, 0);
-            String roomName =
-                (String) tableModel.getValueAt(selectedRow, 1);
-            String roomType =
-                (String) tableModel.getValueAt(selectedRow, 2);
+        bookBtn.addActionListener(e -> handleBooking());
 
-            try {
-                LocalDate date  =
-                    LocalDate.parse(dateField.getText().trim());
+        return bottomPanel;
+    }
+
+    private void updateBookingForm(String filter) {
+        bookingTypeCombo.removeAllItems();
+
+        if ("PRIVATE_ROOM".equals(filter)) {
+            bookingTypeCombo.addItem("MONTHLY");
+            bookingTypeCombo.addItem("DAILY");
+            bookingTypeNote.setText(
+                "For monthly: set start date only. " +
+                "End date auto-set to 30 days later.");
+        } else {
+            bookingTypeCombo.addItem("HOURLY");
+            bookingTypeNote.setText(
+                "Select date and time below");
+        }
+        updateTimeFields();
+    }
+
+    private void updateTimeFields() {
+        String type =
+            (String) bookingTypeCombo.getSelectedItem();
+        if (type == null) return;
+
+        hourlyFields.removeAll();
+
+        if ("MONTHLY".equals(type)) {
+            hourlyFields.add(
+                new JLabel("Start Date (YYYY-MM-DD):"));
+            dateField = new JTextField(
+                LocalDate.now().toString(), 12);
+            hourlyFields.add(dateField);
+            hourlyFields.add(new JLabel(
+                "  End date auto-set to +30 days"));
+
+        } else if ("DAILY".equals(type)) {
+            hourlyFields.add(
+                new JLabel("Date (YYYY-MM-DD):"));
+            dateField = new JTextField(
+                LocalDate.now().toString(), 12);
+            hourlyFields.add(dateField);
+            hourlyFields.add(new JLabel(
+                "  Full day booking"));
+
+        } else {
+            // HOURLY
+            hourlyFields.add(
+                new JLabel("Date (YYYY-MM-DD):"));
+            dateField = new JTextField(
+                LocalDate.now().toString(), 12);
+            hourlyFields.add(dateField);
+
+            hourlyFields.add(
+                new JLabel("  Start (HH:MM):"));
+            startField = new JTextField("09:00", 7);
+            hourlyFields.add(startField);
+
+            hourlyFields.add(
+                new JLabel("  End (HH:MM):"));
+            endField = new JTextField("17:00", 7);
+            hourlyFields.add(endField);
+        }
+
+        hourlyFields.revalidate();
+        hourlyFields.repaint();
+    }
+
+    private void handleBooking() {
+        int selectedRow = roomTable.getSelectedRow();
+        if (selectedRow == -1) {
+            statusLabel.setForeground(Color.RED);
+            statusLabel.setText(
+                "Please select a space from the table.");
+            return;
+        }
+
+        int roomId =
+            (int) tableModel.getValueAt(selectedRow, 0);
+        String roomName =
+            (String) tableModel.getValueAt(selectedRow, 1);
+        String roomType =
+            (String) tableModel.getValueAt(selectedRow, 2);
+        String bookingType =
+            (String) bookingTypeCombo.getSelectedItem();
+
+        try {
+            LocalDate date =
+                LocalDate.parse(dateField.getText().trim());
+            LocalDateTime startDT;
+            LocalDateTime endDT;
+
+            if ("MONTHLY".equals(bookingType)) {
+                startDT = date.atTime(8, 0);
+                endDT   = date.plusDays(30).atTime(20, 0);
+
+            } else if ("DAILY".equals(bookingType)) {
+                startDT = date.atTime(8, 0);
+                endDT   = date.atTime(20, 0);
+
+            } else {
+                // HOURLY
                 LocalTime start =
                     LocalTime.parse(startField.getText().trim());
-                LocalTime end   =
+                LocalTime end =
                     LocalTime.parse(endField.getText().trim());
-                LocalDateTime startDT = LocalDateTime.of(date, start);
-                LocalDateTime endDT   = LocalDateTime.of(date, end);
+                startDT = LocalDateTime.of(date, start);
+                endDT   = LocalDateTime.of(date, end);
 
                 if (!startDT.isBefore(endDT)) {
                     statusLabel.setForeground(Color.RED);
@@ -171,20 +320,44 @@ public class SpaceBrowserPanel extends JPanel {
                     return;
                 }
 
-                // Open cost preview
-                new CostPreviewFrame(
-                    member, roomId, roomName, roomType,
-                    "HOURLY", startDT, endDT,
-                    (JFrame) SwingUtilities.getWindowAncestor(this)
-                ).setVisible(true);
-
-            } catch (Exception ex) {
-                statusLabel.setForeground(Color.RED);
-                statusLabel.setText(ex.getMessage());
+                // Same day check for hourly bookings
+                if (!startDT.toLocalDate().equals(
+                        endDT.toLocalDate())) {
+                    statusLabel.setForeground(Color.RED);
+                    statusLabel.setText(
+                        "Hourly bookings must start " +
+                        "and end on the same day.");
+                    return;
+                }
             }
-        });
 
-        add(bottomPanel, BorderLayout.SOUTH);
+            // Validate private room type
+            if ("PRIVATE_ROOM".equals(roomType) &&
+                "HOURLY".equals(bookingType)) {
+                statusLabel.setForeground(Color.RED);
+                statusLabel.setText(
+                    "Private rooms cannot be booked hourly. " +
+                    "Use DAILY or MONTHLY.");
+                return;
+            }
+
+            // Open cost preview
+            new CostPreviewFrame(
+                member, roomId, roomName,
+                roomType, bookingType,
+                startDT, endDT,
+                (JFrame) SwingUtilities
+                    .getWindowAncestor(this)
+            ).setVisible(true);
+
+            statusLabel.setForeground(Color.GRAY);
+            statusLabel.setText(
+                "Cost preview opened for " + roomName);
+
+        } catch (Exception ex) {
+            statusLabel.setForeground(Color.RED);
+            statusLabel.setText(ex.getMessage());
+        }
     }
 
     private void loadRooms(String filter) {
@@ -198,13 +371,16 @@ public class SpaceBrowserPanel extends JPanel {
                 String rate;
                 if (r.isPrivateRoom()) {
                     rate = "Monthly: PKR " +
-                           String.format("%.0f", r.getMonthlyPrice()) +
-                           " | Daily: PKR " +
-                           String.format("%.0f", r.getDailyPrice());
+                        String.format("%.0f",
+                            r.getMonthlyPrice()) +
+                        "  |  Daily: PKR " +
+                        String.format("%.0f",
+                            r.getDailyPrice());
                 } else {
                     rate = "PKR " +
-                           String.format("%.0f", r.getHourlyPrice()) +
-                           "/hr";
+                        String.format("%.0f",
+                            r.getHourlyPrice()) +
+                        "/hr";
                 }
                 tableModel.addRow(new Object[]{
                     r.getRoomId(),
