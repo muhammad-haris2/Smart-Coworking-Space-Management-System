@@ -6,31 +6,49 @@ public class Room {
     private String roomType;
     private int capacity;
     private String amenities;
+    private String privateSize;
+    private double monthlyPrice;
+    private double dailyPrice;
+    private double hourlyPrice;
     private boolean isActive;
 
     public Room() {}
 
-    public Room(String roomName, String roomType, int capacity, String amenities) {
-        this.roomName  = roomName;
-        this.roomType  = roomType;
-        this.capacity  = capacity;
-        this.amenities = amenities;
-        this.isActive  = true;
+    // Getters
+    public int getRoomId()          { return roomId; }
+    public String getRoomName()     { return roomName; }
+    public String getRoomType()     { return roomType; }
+    public int getCapacity()        { return capacity; }
+    public String getAmenities()    { return amenities; }
+    public String getPrivateSize()  { return privateSize; }
+    public double getMonthlyPrice() { return monthlyPrice; }
+    public double getDailyPrice()   { return dailyPrice; }
+    public double getHourlyPrice()  { return hourlyPrice; }
+    public boolean isActive()       { return isActive; }
+
+    // Setters
+    public void setRoomId(int v)           { this.roomId = v; }
+    public void setRoomName(String v)      { this.roomName = v; }
+    public void setRoomType(String v)      { this.roomType = v; }
+    public void setCapacity(int v)         { this.capacity = v; }
+    public void setAmenities(String v)     { this.amenities = v; }
+    public void setPrivateSize(String v)   { this.privateSize = v; }
+    public void setMonthlyPrice(double v)  { this.monthlyPrice = v; }
+    public void setDailyPrice(double v)    { this.dailyPrice = v; }
+    public void setHourlyPrice(double v)   { this.hourlyPrice = v; }
+    public void setActive(boolean v)       { this.isActive = v; }
+
+    public boolean isHotDesk() {
+        return "HOT_DESK".equals(roomType);
     }
 
-    public int getRoomId()        { return roomId; }
-    public String getRoomName()   { return roomName; }
-    public String getRoomType()   { return roomType; }
-    public int getCapacity()      { return capacity; }
-    public String getAmenities()  { return amenities; }
-    public boolean isActive()     { return isActive; }
+    public boolean isMeetingRoom() {
+        return "MEETING_ROOM".equals(roomType);
+    }
 
-    public void setRoomId(int roomId)           { this.roomId = roomId; }
-    public void setRoomName(String roomName)     { this.roomName = roomName; }
-    public void setRoomType(String roomType)     { this.roomType = roomType; }
-    public void setCapacity(int capacity)        { this.capacity = capacity; }
-    public void setAmenities(String amenities)   { this.amenities = amenities; }
-    public void setActive(boolean active)        { this.isActive = active; }
+    public boolean isPrivateRoom() {
+        return "PRIVATE_ROOM".equals(roomType);
+    }
 
     @Override
     public String toString() { return roomName; }
