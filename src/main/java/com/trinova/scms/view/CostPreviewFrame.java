@@ -13,6 +13,7 @@ import com.trinova.scms.dao.RoomDAO;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,9 @@ public class CostPreviewFrame extends JFrame {
     private List<Facility>      allFacilities = new ArrayList<>();
     private List<JSpinner>      quantitySpinners = new ArrayList<>();
 
-    public CostPreviewFrame(Member member,
-                             int roomId,
-                             String roomName,
-                             String roomType,
-                             String bookingType,
-                             LocalDateTime startTime,
-                             LocalDateTime endTime,
+    public CostPreviewFrame(Member member, int roomId, String roomName,
+                             String roomType, String bookingType,
+                             LocalDateTime startTime, LocalDateTime endTime,
                              JFrame parent) {
         this.member      = member;
         this.roomId      = roomId;
@@ -50,7 +47,7 @@ public class CostPreviewFrame extends JFrame {
         this.parent      = parent;
 
         setTitle("Booking Summary — " + roomName);
-        setSize(560, 650);
+        setSize(580, 680);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -67,8 +64,7 @@ public class CostPreviewFrame extends JFrame {
                 f.setSelectedQuantity(0);
             }
             Room room = new RoomDAO().findById(roomId);
-            CostCalculatorService calc =
-                new CostCalculatorService();
+            CostCalculatorService calc = new CostCalculatorService();
             costResult = calc.calculate(
                 member, room, bookingType,
                 startTime, endTime, allFacilities);
@@ -80,51 +76,51 @@ public class CostPreviewFrame extends JFrame {
 
     private void initComponents() {
         JPanel mainPanel = new JPanel(new BorderLayout(0, 10));
-        mainPanel.setBackground(Color.WHITE);
-        mainPanel.setBorder(
-            BorderFactory.createEmptyBorder(20, 25, 20, 25));
+        mainPanel.setBackground(UITheme.BG_CONTENT);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 20, 25));
 
-        // ── Title ──────────────────────────────────────────
-        JLabel titleLabel = new JLabel(
-            "Booking Summary", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titleLabel.setForeground(new Color(16, 64, 110));
+        // ── Title ────────────────────────────────────────────
+        JLabel titleLabel = UITheme.sectionTitle("Booking Summary");
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
-        // ── Center: booking info + facilities ──────────────
+        // ── Center: booking info + facilities ────────────────
         JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(
-            new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBackground(Color.WHITE);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setOpaque(false);
 
-        // Booking details
         centerPanel.add(buildInfoPanel());
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        // Facilities section
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
         centerPanel.add(buildFacilitiesPanel());
-        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        // Cost breakdown
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 12)));
         centerPanel.add(buildCostPanel());
 
         JScrollPane scroll = new JScrollPane(centerPanel);
         scroll.setBorder(null);
+        scroll.getViewport().setBackground(UITheme.BG_CONTENT);
         mainPanel.add(scroll, BorderLayout.CENTER);
 
-        // ── Buttons ────────────────────────────────────────
+        // ── Buttons ──────────────────────────────────────────
         mainPanel.add(buildButtonPanel(), BorderLayout.SOUTH);
 
         add(mainPanel);
     }
 
     private JPanel buildInfoPanel() {
-        JPanel panel = new JPanel(new GridLayout(0, 2, 10, 6));
-        panel.setBackground(new Color(245, 248, 252));
-        panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(
-                new Color(200, 210, 230)),
-            BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+        JPanel panel = new JPanel(new GridLayout(0, 2, 12, 8)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(UITheme.BG_CARD);
+                g2.fill(new RoundRectangle2D.Float(
+                    0, 0, getWidth(), getHeight(), 16, 16));
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(16, 20, 16, 20));
 
         String[][] info = {
             {"Space",    roomName},
@@ -134,48 +130,61 @@ public class CostPreviewFrame extends JFrame {
                          " → " + endTime.toLocalTime()},
             {"Plan",     member.hasActivePlan() ?
                          member.getPlanType() +
-                         " (expires " +
-                         member.getPlanExpiry() + ")" :
+                         " (expires " + member.getPlanExpiry() + ")" :
                          "No Plan (pay-as-you-go)"}
         };
 
         for (String[] row : info) {
             JLabel key = new JLabel(row[0] + ":");
-            key.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            key.setFont(UITheme.FONT_HEADING);
+            key.setForeground(UITheme.TEXT_SECONDARY);
             panel.add(key);
             JLabel val = new JLabel(row[1]);
-            val.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+            val.setFont(UITheme.FONT_BODY);
+            val.setForeground(UITheme.TEXT_PRIMARY);
             panel.add(val);
         }
         return panel;
     }
 
     private JPanel buildFacilitiesPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(UITheme.BG_CARD);
+                g2.fill(new RoundRectangle2D.Float(
+                    0, 0, getWidth(), getHeight(), 16, 16));
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(16, 20, 16, 20));
 
         JLabel title = new JLabel("Add Extra Facilities (optional)");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        title.setForeground(new Color(16, 64, 110));
-        title.setBorder(
-            BorderFactory.createEmptyBorder(0, 0, 8, 0));
+        title.setFont(UITheme.FONT_HEADING);
+        title.setForeground(UITheme.ACCENT);
+        title.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         panel.add(title, BorderLayout.NORTH);
 
         JPanel grid = new JPanel(new GridBagLayout());
-        grid.setBackground(Color.WHITE);
+        grid.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(4, 4, 4, 4);
         gbc.anchor = GridBagConstraints.WEST;
 
         // Header
-        gbc.gridy = 0; gbc.gridx = 0;
-        grid.add(boldLabel("Facility"), gbc);
-        gbc.gridx = 1;
-        grid.add(boldLabel("Price"), gbc);
-        gbc.gridx = 2;
-        grid.add(boldLabel("For You"), gbc);
-        gbc.gridx = 3;
-        grid.add(boldLabel("Qty"), gbc);
+        gbc.gridy = 0;
+        String[] headers = {"Facility", "Price", "For You", "Qty"};
+        for (int i = 0; i < headers.length; i++) {
+            gbc.gridx = i;
+            JLabel h = new JLabel(headers[i]);
+            h.setFont(UITheme.FONT_TABLE_H);
+            h.setForeground(UITheme.TEXT_PRIMARY);
+            grid.add(h, gbc);
+        }
 
         quantitySpinners.clear();
         String planType = member.getPlanType() != null ?
@@ -184,33 +193,34 @@ public class CostPreviewFrame extends JFrame {
         for (int i = 0; i < allFacilities.size(); i++) {
             Facility f = allFacilities.get(i);
             boolean isFree =
-                ("PREMIUM".equals(planType) &&
-                 f.isFreeForPremium()) ||
-                ("BASIC".equals(planType) &&
-                 f.isFreeForBasic());
+                ("PREMIUM".equals(planType) && f.isFreeForPremium()) ||
+                ("BASIC".equals(planType) && f.isFreeForBasic());
 
             gbc.gridy = i + 1;
 
             gbc.gridx = 0;
-            grid.add(new JLabel(f.getFacilityName()), gbc);
+            JLabel nameLbl = new JLabel(f.getFacilityName());
+            nameLbl.setFont(UITheme.FONT_TABLE);
+            grid.add(nameLbl, gbc);
 
             gbc.gridx = 1;
-            grid.add(new JLabel(
+            JLabel priceLbl = new JLabel(
                 "PKR " + String.format("%.0f", f.getPrice()) +
-                "/" + f.getUnit()), gbc);
+                "/" + f.getUnit());
+            priceLbl.setFont(UITheme.FONT_TABLE);
+            priceLbl.setForeground(UITheme.TEXT_SECONDARY);
+            grid.add(priceLbl, gbc);
 
             gbc.gridx = 2;
-            JLabel freeLabel = new JLabel(
-                isFree ? "FREE ✔" : "Paid");
-            freeLabel.setForeground(
-                isFree ? new Color(0, 128, 0) : Color.DARK_GRAY);
+            JLabel freeLabel = new JLabel(isFree ? "FREE ✔" : "Paid");
+            freeLabel.setForeground(isFree ? UITheme.SUCCESS : UITheme.TEXT_SECONDARY);
             freeLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
             grid.add(freeLabel, gbc);
 
             gbc.gridx = 3;
             JSpinner spinner = new JSpinner(
                 new SpinnerNumberModel(0, 0, 50, 1));
-            spinner.setPreferredSize(new Dimension(60, 28));
+            spinner.setPreferredSize(new Dimension(65, 30));
             quantitySpinners.add(spinner);
             grid.add(spinner, gbc);
         }
@@ -218,16 +228,10 @@ public class CostPreviewFrame extends JFrame {
         panel.add(grid, BorderLayout.CENTER);
 
         // Recalculate button
-        JButton recalcBtn = new JButton(
-            "Update Cost with Facilities");
-        recalcBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        recalcBtn.setBackground(new Color(16, 64, 110));
-        recalcBtn.setForeground(Color.WHITE);
-        recalcBtn.setFocusPainted(false);
+        JButton recalcBtn = UITheme.secondaryButton("Update Cost with Facilities");
         recalcBtn.addActionListener(e -> recalculate());
-        JPanel btnWrap = new JPanel(
-            new FlowLayout(FlowLayout.LEFT));
-        btnWrap.setBackground(Color.WHITE);
+        JPanel btnWrap = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        btnWrap.setOpaque(false);
         btnWrap.add(recalcBtn);
         panel.add(btnWrap, BorderLayout.SOUTH);
 
@@ -237,16 +241,26 @@ public class CostPreviewFrame extends JFrame {
     private JLabel costBreakdownLabel;
 
     private JPanel buildCostPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(240, 248, 240));
-        panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(
-                new Color(0, 150, 0)),
-            BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+        JPanel panel = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(UITheme.SUCCESS_BG);
+                g2.fill(new RoundRectangle2D.Float(
+                    0, 0, getWidth(), getHeight(), 16, 16));
+                // left accent
+                g2.setColor(UITheme.SUCCESS);
+                g2.fillRoundRect(0, 0, 5, getHeight(), 5, 5);
+                g2.dispose();
+            }
+        };
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(16, 20, 16, 20));
 
         costBreakdownLabel = new JLabel(getCostHTML());
-        costBreakdownLabel.setFont(
-            new Font("Segoe UI", Font.PLAIN, 13));
+        costBreakdownLabel.setFont(UITheme.FONT_BODY);
         panel.add(costBreakdownLabel, BorderLayout.CENTER);
         return panel;
     }
@@ -256,19 +270,15 @@ public class CostPreviewFrame extends JFrame {
             return "<html>Calculating...</html>";
         return "<html>" +
             "<b>Base Cost:</b> PKR " +
-            String.format("%.2f", costResult.baseCost) +
-            "<br>" +
+            String.format("%.2f", costResult.baseCost) + "<br>" +
             "<b>Facilities:</b> PKR " +
-            String.format("%.2f", costResult.facilityCost) +
-            "<br>" +
+            String.format("%.2f", costResult.facilityCost) + "<br>" +
             "<b>VAT (17%):</b> PKR " +
-            String.format("%.2f", costResult.vatAmount) +
-            "<br><br>" +
-            "<b style='font-size:14px'>TOTAL: PKR " +
-            String.format("%.2f", costResult.totalCost) +
-            "</b>" +
+            String.format("%.2f", costResult.vatAmount) + "<br><br>" +
+            "<b style='font-size:15px'>TOTAL: PKR " +
+            String.format("%.2f", costResult.totalCost) + "</b>" +
             (costResult.totalCost == 0 ?
-             "<br><i style='color:green'>" +
+             "<br><i style='color:#10B981'>" +
              "This booking is FREE with your plan!</i>" : "") +
             "</html>";
     }
@@ -276,13 +286,11 @@ public class CostPreviewFrame extends JFrame {
     private void recalculate() {
         try {
             for (int i = 0; i < allFacilities.size(); i++) {
-                int qty = (int)
-                    quantitySpinners.get(i).getValue();
+                int qty = (int) quantitySpinners.get(i).getValue();
                 allFacilities.get(i).setSelectedQuantity(qty);
             }
             Room room = new RoomDAO().findById(roomId);
-            CostCalculatorService calc =
-                new CostCalculatorService();
+            CostCalculatorService calc = new CostCalculatorService();
             costResult = calc.calculate(
                 member, room, bookingType,
                 startTime, endTime, allFacilities);
@@ -294,34 +302,45 @@ public class CostPreviewFrame extends JFrame {
     }
 
     private JPanel buildButtonPanel() {
-        JPanel panel = new JPanel(
-            new FlowLayout(FlowLayout.CENTER, 15, 10));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        panel.setBackground(UITheme.BG_CONTENT);
         panel.setBorder(BorderFactory.createMatteBorder(
-            1, 0, 0, 0, Color.LIGHT_GRAY));
+            1, 0, 0, 0, UITheme.BORDER_LIGHT));
 
-        JButton cancelBtn = new JButton("Cancel");
-        cancelBtn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        cancelBtn.setPreferredSize(new Dimension(120, 38));
+        JButton cancelBtn = UITheme.secondaryButton("Cancel");
+        cancelBtn.setPreferredSize(new Dimension(130, 40));
         cancelBtn.addActionListener(e -> dispose());
 
-        boolean isFree = costResult != null &&
-                         costResult.totalCost == 0;
-        String confirmText = isFree ?
-            "Book for FREE" : "Proceed to Payment";
-        JButton confirmBtn = new JButton(confirmText);
-        confirmBtn.setBackground(isFree ?
-            new Color(0, 128, 0) : new Color(16, 64, 110));
-        confirmBtn.setForeground(Color.WHITE);
-        confirmBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        confirmBtn.setFocusPainted(false);
-        confirmBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        confirmBtn.setPreferredSize(new Dimension(180, 38));
+        boolean isFree = costResult != null && costResult.totalCost == 0;
+        String confirmText = isFree ? "Book for FREE" : "Proceed to Payment";
+        JButton confirmBtn = UITheme.primaryButton(confirmText);
+        if (isFree) {
+            confirmBtn = new JButton(confirmText) {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                        RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(UITheme.SUCCESS);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
+                    g2.dispose();
+                    super.paintComponent(g);
+                }
+            };
+            confirmBtn.setForeground(Color.WHITE);
+            confirmBtn.setFont(UITheme.FONT_BTN);
+            confirmBtn.setFocusPainted(false);
+            confirmBtn.setBorderPainted(false);
+            confirmBtn.setContentAreaFilled(false);
+            confirmBtn.setOpaque(false);
+            confirmBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        }
+        confirmBtn.setPreferredSize(new Dimension(200, 40));
+        JButton finalConfirmBtn = confirmBtn;
         confirmBtn.addActionListener(e -> {
             // Update quantities before confirming
             for (int i = 0; i < allFacilities.size(); i++) {
-                int qty = (int)
-                    quantitySpinners.get(i).getValue();
+                int qty = (int) quantitySpinners.get(i).getValue();
                 allFacilities.get(i).setSelectedQuantity(qty);
             }
             if (isFree) {
@@ -337,16 +356,14 @@ public class CostPreviewFrame extends JFrame {
     }
 
     private void openPayment() {
-        String[] methods =
-            {"Visa", "Mastercard", "Digital Wallet"};
+        String[] methods = {"Visa", "Mastercard", "Digital Wallet"};
         String method = (String) JOptionPane.showInputDialog(
             this, "Select payment method:",
             "Payment", JOptionPane.QUESTION_MESSAGE,
             null, methods, methods[0]);
         if (method == null) return;
 
-        String promoCode = JOptionPane.showInputDialog(
-            this,
+        String promoCode = JOptionPane.showInputDialog(this,
             "Enter promo code (leave blank if none):",
             "Promo Code", JOptionPane.QUESTION_MESSAGE);
 
@@ -395,8 +412,7 @@ public class CostPreviewFrame extends JFrame {
 
             // Save payment record
             if (finalTotal > 0) {
-                String txnRef = "TXN" +
-                    System.currentTimeMillis();
+                String txnRef = "TXN" + System.currentTimeMillis();
                 PaymentDAO paymentDAO = new PaymentDAO();
                 paymentDAO.createBookingPayment(
                     member.getMemberId(), bookingId,
@@ -440,11 +456,5 @@ public class CostPreviewFrame extends JFrame {
                 "Booking failed: " + ex.getMessage(),
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private JLabel boldLabel(String text) {
-        JLabel l = new JLabel(text);
-        l.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        return l;
     }
 }

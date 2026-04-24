@@ -25,42 +25,37 @@ public class AdminDashboard extends JFrame {
         setLayout(new BorderLayout());
 
         // ── Top bar ────────────────────────────────────────
-        JPanel topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(new Color(60, 30, 100));
-        topBar.setBorder(
-            BorderFactory.createEmptyBorder(12, 20, 12, 20));
+        JPanel topBar = UITheme.adminTopBar();
 
-        JLabel titleLabel = new JLabel(
-            "SCMS — Admin Control Panel");
-        titleLabel.setForeground(Color.WHITE);
-        titleLabel.setFont(
-            new Font("Segoe UI", Font.BOLD, 16));
+        JLabel titleLabel = new JLabel("⬡  SCMS — Admin");
+        titleLabel.setForeground(UITheme.TEXT_WHITE);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         topBar.add(titleLabel, BorderLayout.WEST);
 
-        JButton logoutBtn = new JButton("Logout");
-        logoutBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        logoutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton logoutBtn = UITheme.logoutButton();
         logoutBtn.addActionListener(e -> {
             new LoginFrame().setVisible(true);
             dispose();
         });
 
-        JLabel adminLabel = new JLabel(
-            "Admin: " + admin.getFullName() + "  ");
-        adminLabel.setForeground(Color.WHITE);
-        adminLabel.setFont(
-            new Font("Segoe UI", Font.PLAIN, 13));
+        JLabel adminLabel = new JLabel("Admin: " + admin.getFullName() + "  ");
+        adminLabel.setForeground(UITheme.TEXT_ON_DARK);
+        adminLabel.setFont(UITheme.FONT_SMALL);
 
-        JPanel rightPanel = new JPanel(
-            new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        rightPanel.setBackground(new Color(60, 30, 100));
-        rightPanel.add(adminLabel);
-        rightPanel.add(logoutBtn);
-        topBar.add(rightPanel, BorderLayout.EAST);
+        JPanel rightItems = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        rightItems.setOpaque(false);
+        rightItems.add(UITheme.initialsAvatar(admin.getFullName(), UITheme.ADMIN_ACCENT));
+        rightItems.add(adminLabel);
+        rightItems.add(logoutBtn);
+        JPanel rightWrapper = new JPanel(new GridBagLayout());
+        rightWrapper.setOpaque(false);
+        rightWrapper.add(rightItems);
+        topBar.add(rightWrapper, BorderLayout.EAST);
         add(topBar, BorderLayout.NORTH);
 
         // ── Content panels ─────────────────────────────────
         JPanel contentPanel = new JPanel(new CardLayout());
+        contentPanel.setBackground(UITheme.BG_CONTENT);
         contentPanel.add(buildAdminHome(),      "Dashboard");
         contentPanel.add(buildAllBookings(),    "All Bookings");
         contentPanel.add(buildAllInvoices(),    "All Invoices");
@@ -73,13 +68,7 @@ public class AdminDashboard extends JFrame {
             (CardLayout) contentPanel.getLayout();
 
         // ── Sidebar ────────────────────────────────────────
-        JPanel sidebar = new JPanel();
-        sidebar.setLayout(
-            new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(new Color(245, 240, 252));
-        sidebar.setBorder(
-            BorderFactory.createEmptyBorder(20, 10, 20, 10));
-        sidebar.setPreferredSize(new Dimension(200, 0));
+        JPanel sidebar = UITheme.sidebar(UITheme.ADMIN_DARK);
 
         String[] menuItems = {
             "Dashboard",
@@ -91,36 +80,27 @@ public class AdminDashboard extends JFrame {
             "Member Directory"
         };
 
-        for (String item : menuItems) {
-            JButton btn = sidebarButton(item);
+        String[] icons = {"#","B","I","S","P","O","M"};
+        for (int i = 0; i < menuItems.length; i++) {
+            String item = menuItems[i];
+            JButton btn = UITheme.sidebarButton(
+                item, UITheme.ADMIN_DARK, UITheme.ADMIN_ACCENT);
             btn.addActionListener(e ->
                 cardLayout.show(contentPanel, item));
             sidebar.add(btn);
-            sidebar.add(Box.createRigidArea(
-                new Dimension(0, 5)));
+            sidebar.add(Box.createRigidArea(new Dimension(0, 4)));
         }
 
         add(sidebar, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
     }
 
-    private JButton sidebarButton(String text) {
-        JButton btn = new JButton(text);
-        btn.setMaximumSize(
-            new Dimension(Integer.MAX_VALUE, 42));
-        btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        btn.setFocusPainted(false);
-        btn.setBackground(new Color(245, 240, 252));
-        btn.setBorderPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setHorizontalAlignment(SwingConstants.LEFT);
-        return btn;
-    }
+    // sidebarButton now provided by UITheme
 
     // ── Dashboard home ─────────────────────────────────────
     private JPanel buildAdminHome() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.WHITE);
+        JPanel panel = UITheme.contentPanel();
+        panel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -128,8 +108,8 @@ public class AdminDashboard extends JFrame {
 
         gbc.gridy = 0;
         JLabel title = new JLabel("Admin Control Panel");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        title.setForeground(new Color(60, 30, 100));
+        title.setFont(UITheme.FONT_TITLE);
+        title.setForeground(UITheme.TEXT_PRIMARY);
         panel.add(title, gbc);
 
         gbc.gridy = 1;
@@ -150,7 +130,7 @@ public class AdminDashboard extends JFrame {
         // Quick stats
         gbc.gridy = 3;
         JPanel statsPanel = new JPanel(
-            new FlowLayout(FlowLayout.CENTER, 20, 10));
+            new FlowLayout(FlowLayout.CENTER, 24, 10));
         statsPanel.setBackground(Color.WHITE);
 
         try {
@@ -168,18 +148,18 @@ public class AdminDashboard extends JFrame {
             int bookingCount =
                 bookSvc.getAllBookings().size();
 
-            statsPanel.add(statCard(
+            statsPanel.add(UITheme.statCard(
                 "Total Members",
                 String.valueOf(memberCount),
-                new Color(16, 64, 110)));
-            statsPanel.add(statCard(
+                UITheme.ACCENT, "M"));
+            statsPanel.add(UITheme.statCard(
                 "Total Spaces",
                 String.valueOf(roomCount),
-                new Color(0, 128, 0)));
-            statsPanel.add(statCard(
+                UITheme.SUCCESS, "S"));
+            statsPanel.add(UITheme.statCard(
                 "Total Bookings",
                 String.valueOf(bookingCount),
-                new Color(180, 80, 0)));
+                UITheme.WARNING, "B"));
         } catch (Exception e) {
             statsPanel.add(new JLabel(
                 "Could not load stats: " + e.getMessage()));
@@ -189,31 +169,7 @@ public class AdminDashboard extends JFrame {
         return panel;
     }
 
-    private JPanel statCard(String label,
-                             String value, Color color) {
-        JPanel card = new JPanel(new GridBagLayout());
-        card.setPreferredSize(new Dimension(160, 90));
-        card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(color, 2),
-            BorderFactory.createEmptyBorder(10, 15, 10, 15)));
-
-        GridBagConstraints g = new GridBagConstraints();
-        g.gridx = 0; g.gridy = 0;
-
-        JLabel valLabel = new JLabel(value);
-        valLabel.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        valLabel.setForeground(color);
-        card.add(valLabel, g);
-
-        g.gridy = 1;
-        JLabel lblLabel = new JLabel(label);
-        lblLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblLabel.setForeground(Color.GRAY);
-        card.add(lblLabel, g);
-
-        return card;
-    }
+    // statCard now provided by UITheme
 
     // ── All Bookings ───────────────────────────────────────
     private JPanel buildAllBookings() {
@@ -1179,26 +1135,10 @@ public class AdminDashboard extends JFrame {
 
     // ── Helpers ────────────────────────────────────────────
     private void styleTable(JTable table) {
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        table.setRowHeight(28);
-        table.getTableHeader().setFont(
-            new Font("Segoe UI", Font.BOLD, 13));
-        table.setSelectionMode(
-            ListSelectionModel.SINGLE_SELECTION);
-        table.setGridColor(new Color(220, 220, 220));
+        UITheme.styleTable(table);
     }
 
     private JPanel btnBar(JButton... buttons) {
-        JPanel bar = new JPanel(
-            new FlowLayout(FlowLayout.LEFT, 10, 8));
-        bar.setBackground(Color.WHITE);
-        bar.setBorder(BorderFactory.createMatteBorder(
-            1, 0, 0, 0, Color.LIGHT_GRAY));
-        for (JButton btn : buttons) {
-            btn.setFont(
-                new Font("Segoe UI", Font.PLAIN, 13));
-            bar.add(btn);
-        }
-        return bar;
+        return UITheme.buttonBar(buttons);
     }
 }

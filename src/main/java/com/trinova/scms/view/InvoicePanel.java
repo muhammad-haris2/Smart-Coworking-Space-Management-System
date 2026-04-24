@@ -26,23 +26,20 @@ public class InvoicePanel extends JPanel {
                 "Error: " + e.getMessage());
         }
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(UITheme.BG_CONTENT);
         initComponents();
         loadInvoices();
     }
 
     private void initComponents() {
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(
-            BorderFactory.createEmptyBorder(15, 15, 10, 15));
+        topPanel.setBackground(UITheme.BG_CONTENT);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(16, 20, 12, 20));
 
-        JLabel titleLabel = new JLabel("My Invoices");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titleLabel.setForeground(new Color(16, 64, 110));
+        JLabel titleLabel = UITheme.sectionTitle("My Invoices");
         topPanel.add(titleLabel, BorderLayout.WEST);
 
-        JButton refreshBtn = new JButton("Refresh");
+        JButton refreshBtn = UITheme.secondaryButton("Refresh");
         refreshBtn.addActionListener(e -> loadInvoices());
         topPanel.add(refreshBtn, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
@@ -58,28 +55,24 @@ public class InvoicePanel extends JPanel {
             }
         };
         invoiceTable = new JTable(tableModel);
-        invoiceTable.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        invoiceTable.setRowHeight(28);
-        invoiceTable.getTableHeader().setFont(
-            new Font("Segoe UI", Font.BOLD, 13));
-        invoiceTable.setSelectionMode(
-            ListSelectionModel.SINGLE_SELECTION);
+        UITheme.styleTable(invoiceTable);
 
-        JScrollPane scrollPane = new JScrollPane(invoiceTable);
-        scrollPane.setBorder(
-            BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        JScrollPane scrollPane = UITheme.tableScrollPane(invoiceTable);
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createEmptyBorder(0, 20, 0, 20),
+            scrollPane.getBorder()));
         add(scrollPane, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(
-            new FlowLayout(FlowLayout.LEFT, 15, 10));
-        bottomPanel.setBackground(Color.WHITE);
-        bottomPanel.setBorder(BorderFactory.createMatteBorder(
-            1, 0, 0, 0, Color.LIGHT_GRAY));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        bottomPanel.setBackground(UITheme.BG_CONTENT);
+        bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, UITheme.BORDER_LIGHT),
+            BorderFactory.createEmptyBorder(6, 14, 6, 14)));
 
         statusLabel = new JLabel(
             "Invoices are auto-generated for every booking.");
-        statusLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-        statusLabel.setForeground(Color.GRAY);
+        statusLabel.setFont(UITheme.FONT_TINY);
+        statusLabel.setForeground(UITheme.TEXT_MUTED);
         bottomPanel.add(statusLabel);
         add(bottomPanel, BorderLayout.SOUTH);
     }
@@ -103,8 +96,7 @@ public class InvoicePanel extends JPanel {
                 });
             }
             if (invoices.isEmpty()) {
-                statusLabel.setText(
-                    "No invoices yet. Make a booking first.");
+                statusLabel.setText("No invoices yet. Make a booking first.");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,

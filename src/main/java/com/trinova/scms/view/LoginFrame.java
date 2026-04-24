@@ -5,6 +5,7 @@ import com.trinova.scms.service.AuthService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 
 public class LoginFrame extends JFrame {
 
@@ -14,7 +15,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         setTitle("SCMS - Smart Coworking Space");
-        setSize(450, 380);
+        setSize(520, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -22,101 +23,134 @@ public class LoginFrame extends JFrame {
     }
 
     private void initComponents() {
-        JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(Color.WHITE);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
+        // ── Full-frame gradient background ───────────────────
+        JPanel bg = UITheme.gradientBackground();
+
+        // ── Floating card ────────────────────────────────────
+        JPanel card = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                // card shadow
+                g2.setColor(new Color(0, 0, 0, 30));
+                g2.fill(new RoundRectangle2D.Float(4, 4, getWidth() - 4, getHeight() - 4, 24, 24));
+                // card body
+                g2.setColor(Color.WHITE);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth() - 4, getHeight() - 4, 24, 24));
+                g2.dispose();
+            }
+        };
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(420, 500));
+        card.setBorder(BorderFactory.createEmptyBorder(36, 40, 30, 40));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(8, 0, 8, 0);
-
-        // Title
-        JLabel titleLabel = new JLabel("SCMS — Sign In", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        titleLabel.setForeground(new Color(16, 64, 110));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        mainPanel.add(titleLabel, gbc);
-
-        // Subtitle
-        JLabel subLabel = new JLabel("Smart Coworking Space Management", SwingConstants.CENTER);
-        subLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        subLabel.setForeground(Color.GRAY);
-        gbc.gridy = 1;
-        mainPanel.add(subLabel, gbc);
-
-        // Separator
-        gbc.gridy = 2;
-        mainPanel.add(new JSeparator(), gbc);
-
-        // Email label
-        gbc.gridwidth = 1; gbc.gridy = 3; gbc.gridx = 0;
-        gbc.insets = new Insets(6, 0, 2, 10);
-        mainPanel.add(new JLabel("Email:"), gbc);
-
-        // Email field
-        emailField = new JTextField(20);
-        emailField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        gbc.gridx = 1;
-        mainPanel.add(emailField, gbc);
-
-        // Password label
-        gbc.gridy = 4; gbc.gridx = 0;
-        mainPanel.add(new JLabel("Password:"), gbc);
-
-        // Password field
-        passwordField = new JPasswordField(20);
-        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        gbc.gridx = 1;
-        mainPanel.add(passwordField, gbc);
-
-        // Status label
-        statusLabel = new JLabel(" ", SwingConstants.CENTER);
-        statusLabel.setForeground(Color.RED);
-        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridwidth = 2;
         gbc.insets = new Insets(4, 0, 4, 0);
-        mainPanel.add(statusLabel, gbc);
 
-        // Login button
-        JButton loginBtn = new JButton("Login");
-        loginBtn.setBackground(new Color(16, 64, 110));
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        loginBtn.setFocusPainted(false);
-        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        loginBtn.setPreferredSize(new Dimension(0, 38));
-        gbc.gridy = 6;
-        gbc.insets = new Insets(8, 0, 4, 0);
-        mainPanel.add(loginBtn, gbc);
-
-        // Register button
-        JButton registerBtn = new JButton("Don't have an account? Register");
-        registerBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        registerBtn.setBorderPainted(false);
-        registerBtn.setContentAreaFilled(false);
-        registerBtn.setForeground(new Color(16, 64, 110));
-        registerBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        gbc.gridy = 7;
+        // ── Avatar circle ────────────────────────────────────
+        gbc.gridy = 0;
         gbc.insets = new Insets(0, 0, 4, 0);
-        mainPanel.add(registerBtn, gbc);
+        JLabel avatar = new JLabel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                int d = Math.min(getWidth(), getHeight());
+                int x = (getWidth() - d) / 2;
+                g2.setColor(UITheme.ACCENT);
+                g2.fillOval(x, 0, d, d);
+                // key icon
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 28));
+                String icon = "🔑";
+                FontMetrics fm = g2.getFontMetrics();
+                g2.drawString(icon,
+                    x + (d - fm.stringWidth(icon)) / 2,
+                    (d + fm.getAscent() - fm.getDescent()) / 2);
+                g2.dispose();
+            }
+        };
+        avatar.setPreferredSize(new Dimension(64, 64));
+        avatar.setHorizontalAlignment(SwingConstants.CENTER);
+        card.add(avatar, gbc);
 
-        // Forgot password button
-        JButton forgotBtn = new JButton("Forgot Password?");
-        forgotBtn.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        forgotBtn.setBorderPainted(false);
-        forgotBtn.setContentAreaFilled(false);
-        forgotBtn.setForeground(Color.GRAY);
-        forgotBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        // ── Title ────────────────────────────────────────────
+        gbc.gridy = 1;
+        gbc.insets = new Insets(12, 0, 2, 0);
+        JLabel titleLabel = new JLabel("Welcome Back", SwingConstants.CENTER);
+        titleLabel.setFont(UITheme.FONT_TITLE);
+        titleLabel.setForeground(UITheme.TEXT_PRIMARY);
+        card.add(titleLabel, gbc);
+
+        // ── Subtitle ─────────────────────────────────────────
+        gbc.gridy = 2;
+        gbc.insets = new Insets(0, 0, 20, 0);
+        JLabel subLabel = new JLabel("Sign in to your coworking account", SwingConstants.CENTER);
+        subLabel.setFont(UITheme.FONT_SMALL);
+        subLabel.setForeground(UITheme.TEXT_MUTED);
+        card.add(subLabel, gbc);
+
+        // ── Email label ──────────────────────────────────────
+        gbc.gridy = 3; gbc.gridwidth = 2;
+        gbc.insets = new Insets(4, 0, 4, 0);
+        card.add(UITheme.fieldLabel("EMAIL"), gbc);
+
+        // ── Email field ──────────────────────────────────────
+        gbc.gridy = 4;
+        emailField = UITheme.styledField(20);
+        card.add(emailField, gbc);
+
+        // ── Password label ───────────────────────────────────
+        gbc.gridy = 5;
+        gbc.insets = new Insets(12, 0, 4, 0);
+        card.add(UITheme.fieldLabel("PASSWORD"), gbc);
+
+        // ── Password field ───────────────────────────────────
+        gbc.gridy = 6;
+        gbc.insets = new Insets(4, 0, 4, 0);
+        passwordField = UITheme.styledPasswordField(20);
+        card.add(passwordField, gbc);
+
+        // ── Status label ─────────────────────────────────────
+        statusLabel = new JLabel(" ", SwingConstants.CENTER);
+        statusLabel.setForeground(UITheme.DANGER);
+        statusLabel.setFont(UITheme.FONT_SMALL);
+        gbc.gridy = 7;
+        gbc.insets = new Insets(6, 0, 6, 0);
+        card.add(statusLabel, gbc);
+
+        // ── Login button ─────────────────────────────────────
+        JButton loginBtn = UITheme.primaryButton("Sign In");
         gbc.gridy = 8;
-        mainPanel.add(forgotBtn, gbc);
+        gbc.insets = new Insets(4, 0, 8, 0);
+        card.add(loginBtn, gbc);
 
-        // Actions
+        // ── Register link ────────────────────────────────────
+        JButton registerBtn = UITheme.ghostButton(
+            "Don't have an account? Create one", UITheme.ACCENT);
+        gbc.gridy = 9;
+        gbc.insets = new Insets(2, 0, 2, 0);
+        card.add(registerBtn, gbc);
+
+        // ── Forgot password ──────────────────────────────────
+        JButton forgotBtn = UITheme.ghostButton(
+            "Forgot Password?", UITheme.TEXT_MUTED);
+        gbc.gridy = 10;
+        card.add(forgotBtn, gbc);
+
+        // ── Actions (UNCHANGED) ──────────────────────────────
         loginBtn.addActionListener(e -> doLogin());
         passwordField.addActionListener(e -> doLogin());
         registerBtn.addActionListener(e -> openRegister());
         forgotBtn.addActionListener(e -> openForgotPassword());
 
-        add(mainPanel);
+        bg.add(card);
+        add(bg);
     }
 
     private void doLogin() {
@@ -142,7 +176,7 @@ public class LoginFrame extends JFrame {
             dispose();
 
         } catch (Exception ex) {
-            statusLabel.setForeground(Color.RED);
+            statusLabel.setForeground(UITheme.DANGER);
             statusLabel.setText(ex.getMessage());
             passwordField.setText("");
         }
