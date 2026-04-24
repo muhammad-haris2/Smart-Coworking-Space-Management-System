@@ -44,12 +44,16 @@ public class MemberDashboard extends JFrame {
             dispose();
         });
 
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
-        rightPanel.setOpaque(false);
-        rightPanel.add(UITheme.initialsAvatar(member.getFullName(), UITheme.ACCENT));
-        rightPanel.add(welcomeLabel);
-        rightPanel.add(logoutBtn);
-        topBar.add(rightPanel, BorderLayout.EAST);
+        JPanel rightItems = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        rightItems.setOpaque(false);
+        rightItems.add(UITheme.initialsAvatar(member.getFullName(), UITheme.ACCENT));
+        rightItems.add(welcomeLabel);
+        rightItems.add(logoutBtn);
+        // Wrap in GridBagLayout for vertical centering
+        JPanel rightWrapper = new JPanel(new GridBagLayout());
+        rightWrapper.setOpaque(false);
+        rightWrapper.add(rightItems);
+        topBar.add(rightWrapper, BorderLayout.EAST);
         add(topBar, BorderLayout.NORTH);
 
         // ── Content panels ───────────────────────────────────
@@ -174,55 +178,86 @@ public class MemberDashboard extends JFrame {
         outer.setLayout(new GridBagLayout());
 
         JPanel card = UITheme.cardPanel();
-        card.setLayout(new GridBagLayout());
-        card.setPreferredSize(new Dimension(500, 400));
+        card.setLayout(new BorderLayout(0, 0));
+        card.setPreferredSize(new Dimension(580, 590));
+
+        // ── Avatar header ────────────────────────────────────
+        JPanel headerPanel = new JPanel();
+        headerPanel.setOpaque(false);
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, UITheme.BORDER_LIGHT),
+            BorderFactory.createEmptyBorder(10, 0, 16, 0)));
+
+        JLabel avatar = UITheme.initialsAvatar(member.getFullName(), UITheme.ACCENT);
+        avatar.setPreferredSize(new Dimension(56, 56));
+        avatar.setMinimumSize(new Dimension(56, 56));
+        avatar.setMaximumSize(new Dimension(56, 56));
+        avatar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.add(avatar);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JLabel nameHeader = new JLabel(member.getFullName());
+        nameHeader.setFont(UITheme.FONT_SUBTITLE);
+        nameHeader.setForeground(UITheme.TEXT_PRIMARY);
+        nameHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.add(nameHeader);
+
+        JLabel emailHeader = new JLabel(member.getEmail());
+        emailHeader.setFont(UITheme.FONT_SMALL);
+        emailHeader.setForeground(UITheme.TEXT_MUTED);
+        emailHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+        headerPanel.add(emailHeader);
+
+        card.add(headerPanel, BorderLayout.NORTH);
+
+        // ── Form body ────────────────────────────────────────
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setOpaque(false);
+        formPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(6, 0, 6, 0);
-        gbc.gridx = 0; gbc.gridwidth = 2;
-
-        // Title
-        gbc.gridy = 0;
-        gbc.insets = new Insets(0, 0, 16, 0);
-        JLabel titleLabel = UITheme.sectionTitle("My Profile");
-        card.add(titleLabel, gbc);
-
+        gbc.gridx = 0;
         gbc.gridwidth = 1;
-        JTextField nameField = UITheme.styledField(20);
+        gbc.weightx = 1.0;
+
+        JTextField nameField = UITheme.styledField(30);
         nameField.setText(member.getFullName());
-        JTextField emailField = UITheme.styledField(20);
+        JTextField emailField = UITheme.styledField(30);
         emailField.setText(member.getEmail());
         emailField.setEditable(false);
         emailField.setBackground(UITheme.BG_CARD_ALT);
-        JTextField phoneField = UITheme.styledField(20);
+        JTextField phoneField = UITheme.styledField(30);
         phoneField.setText(member.getPhone() != null ? member.getPhone() : "");
-        JTextField bioField = UITheme.styledField(20);
+        JTextField bioField = UITheme.styledField(30);
         bioField.setText(member.getBio() != null ? member.getBio() : "");
 
-        String[] labels = {"Full Name", "Email", "Phone", "Bio"};
+        String[] labels = {"FULL NAME", "EMAIL (read-only)", "PHONE", "BIO"};
         JTextField[] fields = {nameField, emailField, phoneField, bioField};
 
+        int row = 0;
         for (int i = 0; i < labels.length; i++) {
-            gbc.gridy = i * 2 + 1; gbc.gridx = 0; gbc.gridwidth = 2;
-            gbc.insets = new Insets(8, 0, 4, 0);
-            card.add(UITheme.fieldLabel(labels[i].toUpperCase()), gbc);
-            gbc.gridy = i * 2 + 2;
+            gbc.gridy = row++;
+            gbc.insets = new Insets(10, 0, 4, 0);
+            formPanel.add(UITheme.fieldLabel(labels[i]), gbc);
+
+            gbc.gridy = row++;
             gbc.insets = new Insets(0, 0, 4, 0);
-            card.add(fields[i], gbc);
+            formPanel.add(fields[i], gbc);
         }
 
         JLabel statusLabel = new JLabel(" ", SwingConstants.CENTER);
         statusLabel.setForeground(UITheme.SUCCESS);
         statusLabel.setFont(UITheme.FONT_SMALL);
-        gbc.gridy = 9; gbc.gridx = 0; gbc.gridwidth = 2;
-        gbc.insets = new Insets(8, 0, 8, 0);
-        card.add(statusLabel, gbc);
+        gbc.gridy = row++;
+        gbc.insets = new Insets(12, 0, 4, 0);
+        formPanel.add(statusLabel, gbc);
 
         JButton saveBtn = UITheme.primaryButton("Save Changes");
-        gbc.gridy = 10;
+        gbc.gridy = row;
         gbc.insets = new Insets(4, 0, 0, 0);
-        card.add(saveBtn, gbc);
+        formPanel.add(saveBtn, gbc);
 
         saveBtn.addActionListener(e -> {
             try {
@@ -240,6 +275,7 @@ public class MemberDashboard extends JFrame {
             }
         });
 
+        card.add(formPanel, BorderLayout.CENTER);
         outer.add(card);
         return outer;
     }

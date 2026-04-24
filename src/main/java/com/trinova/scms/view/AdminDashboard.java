@@ -42,12 +42,15 @@ public class AdminDashboard extends JFrame {
         adminLabel.setForeground(UITheme.TEXT_ON_DARK);
         adminLabel.setFont(UITheme.FONT_SMALL);
 
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
-        rightPanel.setOpaque(false);
-        rightPanel.add(UITheme.initialsAvatar(admin.getFullName(), UITheme.ADMIN_ACCENT));
-        rightPanel.add(adminLabel);
-        rightPanel.add(logoutBtn);
-        topBar.add(rightPanel, BorderLayout.EAST);
+        JPanel rightItems = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        rightItems.setOpaque(false);
+        rightItems.add(UITheme.initialsAvatar(admin.getFullName(), UITheme.ADMIN_ACCENT));
+        rightItems.add(adminLabel);
+        rightItems.add(logoutBtn);
+        JPanel rightWrapper = new JPanel(new GridBagLayout());
+        rightWrapper.setOpaque(false);
+        rightWrapper.add(rightItems);
+        topBar.add(rightWrapper, BorderLayout.EAST);
         add(topBar, BorderLayout.NORTH);
 
         // ── Content panels ─────────────────────────────────
