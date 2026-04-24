@@ -6,6 +6,7 @@ import com.trinova.scms.service.BillingService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,20 +26,17 @@ public class SubscriptionPanel extends JPanel {
                 "Error: " + e.getMessage());
         }
         setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
+        setBackground(UITheme.BG_CONTENT);
         initComponents();
         loadPlans();
     }
 
     private void initComponents() {
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(
-            BorderFactory.createEmptyBorder(15, 15, 10, 15));
+        topPanel.setBackground(UITheme.BG_CONTENT);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(16, 20, 12, 20));
 
-        JLabel titleLabel = new JLabel("Membership Plans");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titleLabel.setForeground(new Color(16, 64, 110));
+        JLabel titleLabel = UITheme.sectionTitle("Membership Plans");
         topPanel.add(titleLabel, BorderLayout.WEST);
 
         // Show current plan
@@ -47,30 +45,29 @@ public class SubscriptionPanel extends JPanel {
               " (Expires: " + member.getPlanExpiry() + ")"
             : "No active plan — Pay-as-you-go (full rates apply)";
         JLabel currentLabel = new JLabel(currentPlan);
-        currentLabel.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        currentLabel.setFont(UITheme.FONT_SMALL);
         currentLabel.setForeground(
-            member.hasActivePlan() ?
-            new Color(0, 128, 0) : Color.GRAY);
+            member.hasActivePlan() ? UITheme.SUCCESS : UITheme.TEXT_MUTED);
         topPanel.add(currentLabel, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
 
-        plansPanel = new JPanel(new FlowLayout(
-            FlowLayout.CENTER, 30, 30));
-        plansPanel.setBackground(Color.WHITE);
-        add(new JScrollPane(plansPanel), BorderLayout.CENTER);
+        plansPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 30));
+        plansPanel.setBackground(UITheme.BG_CONTENT);
+        add(new JScrollPane(plansPanel) {{
+            setBorder(null);
+            getViewport().setBackground(UITheme.BG_CONTENT);
+        }}, BorderLayout.CENTER);
 
         statusLabel = new JLabel(" ", SwingConstants.CENTER);
-        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        statusLabel.setBorder(
-            BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        statusLabel.setFont(UITheme.FONT_SMALL);
+        statusLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(statusLabel, BorderLayout.SOUTH);
     }
 
     private void loadPlans() {
         plansPanel.removeAll();
         try {
-            List<SubscriptionPlan> plans =
-                billingService.getAllPlans();
+            List<SubscriptionPlan> plans = billingService.getAllPlans();
             for (SubscriptionPlan plan : plans) {
                 plansPanel.add(buildPlanCard(plan));
             }
@@ -88,78 +85,117 @@ public class SubscriptionPanel extends JPanel {
             member.getPlanType() != null &&
             member.getPlanType().equalsIgnoreCase(plan.getPlanType());
 
-        JPanel card = new JPanel(new GridBagLayout());
-        card.setPreferredSize(new Dimension(220, 320));
-        card.setBackground(isCurrent ?
-            new Color(230, 255, 230) : new Color(240, 244, 248));
-        card.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(
-                isCurrent ?
-                new Color(0, 128, 0) : new Color(16, 64, 110), 2),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        Color accentColor = isCurrent ? UITheme.SUCCESS : UITheme.ACCENT;
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.insets = new Insets(6, 0, 6, 0);
-        gbc.anchor = GridBagConstraints.CENTER;
+        // ── Outer wrapper with rounded border ────────────────
+        JPanel card = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                // white body
+                g2.setColor(UITheme.BG_CARD);
+                g2.fill(new RoundRectangle2D.Float(
+                    0, 0, getWidth(), getHeight(), 20, 20));
+                if (isCurrent) {
+                    g2.setColor(accentColor);
+                    g2.setStroke(new BasicStroke(2.5f));
+                    g2.draw(new RoundRectangle2D.Float(
+                        1, 1, getWidth() - 3, getHeight() - 3, 20, 20));
+                }
+                g2.dispose();
+            }
+        };
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(270, 420));
 
-        // Plan name
-        gbc.gridy = 0;
+        // ── Header panel (gradient) ──────────────────────────
+        JPanel header = new JPanel(new GridBagLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setPaint(new GradientPaint(
+                    0, 0, accentColor,
+                    getWidth(), 0, accentColor.darker()));
+                g2.fillRoundRect(0, 0, getWidth(), getHeight() + 10, 20, 20);
+                g2.dispose();
+            }
+        };
+        header.setOpaque(false);
+        header.setPreferredSize(new Dimension(0, 80));
         JLabel nameLabel = new JLabel(plan.getPlanName());
-        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        nameLabel.setForeground(new Color(16, 64, 110));
-        card.add(nameLabel, gbc);
+        nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        nameLabel.setForeground(Color.WHITE);
+        header.add(nameLabel);
+        card.add(header, BorderLayout.NORTH);
+
+        // ── Body panel (white) ───────────────────────────────
+        JPanel body = new JPanel();
+        body.setOpaque(false);
+        body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+        body.setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
 
         // Price
-        gbc.gridy = 1;
         JLabel priceLabel = new JLabel(
-            "PKR " + String.format("%.0f", plan.getPrice()) +
-            "/month");
-        priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        priceLabel.setForeground(new Color(0, 128, 0));
-        card.add(priceLabel, gbc);
+            "PKR " + String.format("%.0f", plan.getPrice()));
+        priceLabel.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        priceLabel.setForeground(UITheme.TEXT_PRIMARY);
+        priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        body.add(priceLabel);
+
+        JLabel perMonth = new JLabel("/month");
+        perMonth.setFont(UITheme.FONT_SMALL);
+        perMonth.setForeground(UITheme.TEXT_MUTED);
+        perMonth.setAlignmentX(Component.CENTER_ALIGNMENT);
+        body.add(perMonth);
+        body.add(Box.createRigidArea(new Dimension(0, 16)));
 
         // Benefits
-        gbc.gridy = 2;
         String benefits = plan.getPlanType().equals("BASIC")
-            ? "<html><center>✔ 5 free desk hrs/day<br>" +
-              "✔ WiFi included<br>" +
-              "✗ Meeting rooms paid<br>" +
-              "✗ Extra facilities paid</center></html>"
-            : "<html><center>✔ Unlimited desk usage<br>" +
-              "✔ 2 free meeting hrs/day<br>" +
-              "✔ Coffee, printing free<br>" +
-              "✔ Locker & parking free</center></html>";
+            ? "<html><center>+ 5 free desk hours/day<br>" +
+              "+ WiFi included<br>" +
+              "- Meeting rooms paid<br>" +
+              "- Extra facilities paid</center></html>"
+            : "<html><center>+ Unlimited desk usage<br>" +
+              "+ 2 free meeting hrs/day<br>" +
+              "+ Coffee, printing free<br>" +
+              "+ Locker &amp; parking free</center></html>";
         JLabel benefitsLabel = new JLabel(benefits);
-        benefitsLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        card.add(benefitsLabel, gbc);
+        benefitsLabel.setFont(UITheme.FONT_BODY);
+        benefitsLabel.setForeground(UITheme.TEXT_SECONDARY);
+        benefitsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        body.add(benefitsLabel);
+        body.add(Box.createRigidArea(new Dimension(0, 12)));
 
-        // Current plan badge
+        // Active badge
         if (isCurrent) {
-            gbc.gridy = 3;
-            JLabel activeLabel = new JLabel("✔ ACTIVE");
-            activeLabel.setFont(
-                new Font("Segoe UI", Font.BOLD, 13));
-            activeLabel.setForeground(new Color(0, 128, 0));
-            card.add(activeLabel, gbc);
+            JLabel activeLabel = new JLabel("ACTIVE");
+            activeLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+            activeLabel.setForeground(UITheme.SUCCESS);
+            activeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            body.add(activeLabel);
+            body.add(Box.createRigidArea(new Dimension(0, 8)));
         }
 
-        // Subscribe button
-        gbc.gridy = 4;
-        JButton selectBtn = new JButton(
-            isCurrent ? "Active Plan" : "Subscribe & Pay");
-        selectBtn.setBackground(isCurrent ?
-            new Color(0, 128, 0) : new Color(16, 64, 110));
-        selectBtn.setForeground(Color.WHITE);
-        selectBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        selectBtn.setFocusPainted(false);
-        selectBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        selectBtn.setEnabled(!isCurrent);
-        selectBtn.setPreferredSize(new Dimension(170, 38));
-
+        // Button
+        JButton selectBtn;
+        if (isCurrent) {
+            selectBtn = new JButton("Active Plan");
+            selectBtn.setEnabled(false);
+            selectBtn.setFont(UITheme.FONT_BTN);
+        } else {
+            selectBtn = UITheme.primaryButton("Subscribe & Pay");
+        }
+        selectBtn.setMaximumSize(new Dimension(200, 42));
+        selectBtn.setPreferredSize(new Dimension(200, 42));
+        selectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         selectBtn.addActionListener(e -> openPayment(plan));
-        card.add(selectBtn, gbc);
+        body.add(selectBtn);
 
+        card.add(body, BorderLayout.CENTER);
         return card;
     }
 
@@ -178,20 +214,16 @@ public class SubscriptionPanel extends JPanel {
         // Payment method selection
         String[] methods = {"Visa", "Mastercard", "Digital Wallet"};
         String method = (String) JOptionPane.showInputDialog(
-            this,
-            "Select payment method:",
-            "Payment",
+            this, "Select payment method:", "Payment",
             JOptionPane.QUESTION_MESSAGE,
             null, methods, methods[0]);
 
         if (method == null) return;
 
         // Promo code
-        String promoCode = JOptionPane.showInputDialog(
-            this,
+        String promoCode = JOptionPane.showInputDialog(this,
             "Enter promo code (leave empty if none):",
-            "Promo Code",
-            JOptionPane.QUESTION_MESSAGE);
+            "Promo Code", JOptionPane.QUESTION_MESSAGE);
 
         double finalAmount = plan.getPrice();
         try {
@@ -229,7 +261,7 @@ public class SubscriptionPanel extends JPanel {
                 "Subscription Activated",
                 JOptionPane.INFORMATION_MESSAGE);
 
-            statusLabel.setForeground(new Color(0, 128, 0));
+            statusLabel.setForeground(UITheme.SUCCESS);
             statusLabel.setText(
                 plan.getPlanName() +
                 " plan activated! Valid until: " + expiry);
@@ -243,7 +275,7 @@ public class SubscriptionPanel extends JPanel {
             loadPlans();
 
         } catch (Exception ex) {
-            statusLabel.setForeground(Color.RED);
+            statusLabel.setForeground(UITheme.DANGER);
             statusLabel.setText("Error: " + ex.getMessage());
         }
     }
