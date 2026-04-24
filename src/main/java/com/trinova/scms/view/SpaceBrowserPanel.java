@@ -47,76 +47,58 @@ public class SpaceBrowserPanel extends JPanel {
         // ── Top bar ────────────────────────────────────────
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
-        topPanel.setBorder(
-            BorderFactory.createEmptyBorder(15, 15, 10, 15));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 25, 15, 25));
 
         JLabel titleLabel = new JLabel("Browse Spaces");
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titleLabel.setForeground(new Color(16, 64, 110));
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titleLabel.setForeground(com.trinova.scms.util.UIConfig.NAVY_DARK);
         topPanel.add(titleLabel, BorderLayout.WEST);
 
         // Plan info banner
-        String planInfo = member.hasActivePlan()
-            ? "Your Plan: " + member.getPlanType() +
-              " — expires " + member.getPlanExpiry()
-            : "No Plan — full rates apply";
-        JLabel planLabel = new JLabel(planInfo);
-        planLabel.setFont(
-            new Font("Segoe UI", Font.ITALIC, 12));
-        planLabel.setForeground(
-            member.hasActivePlan() ?
-            new Color(0, 128, 0) :
-            new Color(200, 100, 0));
-        topPanel.add(planLabel, BorderLayout.CENTER);
+        JPanel banner = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        banner.setBackground(new Color(230, 250, 240));
+        banner.setBorder(BorderFactory.createLineBorder(new Color(180, 230, 200), 1));
+        banner.putClientProperty("FlatLaf.style", "arc: 20");
+        JLabel planLabel = new JLabel("✔ PREMIUM Plan — expires 2026-05-20");
+        planLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        planLabel.setForeground(new Color(0, 100, 50));
+        banner.add(planLabel);
+        topPanel.add(banner, BorderLayout.CENTER);
 
         // Filter
-        JPanel filterPanel = new JPanel(
-            new FlowLayout(FlowLayout.RIGHT));
-        filterPanel.setBackground(Color.WHITE);
-        filterPanel.add(new JLabel("Filter: "));
-        filterCombo = new JComboBox<>(new String[]{
-            "ALL", "HOT_DESK",
-            "MEETING_ROOM", "PRIVATE_ROOM"});
-        filterCombo.setFont(
-            new Font("Segoe UI", Font.PLAIN, 13));
-        filterCombo.addActionListener(e -> {
-            loadRooms((String) filterCombo.getSelectedItem());
-            updateBookingForm(
-                (String) filterCombo.getSelectedItem());
-        });
+        JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
+        filterPanel.setOpaque(false);
+        filterPanel.add(new JLabel("Filter:"));
+        filterCombo = new JComboBox<>(new String[]{"ALL", "HOT_DESK", "MEETING_ROOM", "PRIVATE_ROOM"});
+        filterCombo.setPreferredSize(new Dimension(100, 32));
         filterPanel.add(filterCombo);
 
-        JButton refreshBtn = new JButton("Refresh");
-        refreshBtn.addActionListener(e ->
-            loadRooms(
-                (String) filterCombo.getSelectedItem()));
+        JButton refreshBtn = new JButton("Refresh ⟳");
+        refreshBtn.setPreferredSize(new Dimension(90, 32));
+        refreshBtn.putClientProperty("FlatLaf.style", "arc: 8");
         filterPanel.add(refreshBtn);
         topPanel.add(filterPanel, BorderLayout.EAST);
         add(topPanel, BorderLayout.NORTH);
 
         // ── Table ──────────────────────────────────────────
-        String[] columns = {
-            "ID", "Space Name", "Type",
-            "Capacity", "Amenities", "Rate"};
+        String[] columns = {"ID", "Space Name", "Type", "Capacity", "Amenities", "Hourly PKR", "Daily PKR", "Monthly PKR"};
         tableModel = new DefaultTableModel(columns, 0) {
-            public boolean isCellEditable(int r, int c) {
-                return false;
-            }
+            public boolean isCellEditable(int r, int c) { return false; }
         };
         roomTable = new JTable(tableModel);
-        roomTable.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        roomTable.setRowHeight(28);
-        roomTable.getTableHeader().setFont(
-            new Font("Segoe UI", Font.BOLD, 13));
-        roomTable.setSelectionMode(
-            ListSelectionModel.SINGLE_SELECTION);
-        roomTable.getColumnModel().getColumn(0).setMaxWidth(40);
-        roomTable.getColumnModel().getColumn(2).setMaxWidth(120);
-        roomTable.getColumnModel().getColumn(3).setMaxWidth(80);
+        roomTable.setRowHeight(40);
+        roomTable.setShowHorizontalLines(true);
+        roomTable.setGridColor(new Color(245, 245, 245));
+        roomTable.getTableHeader().setPreferredSize(new Dimension(0, 35));
+        
+        // Mock data for design parity
+        tableModel.addRow(new Object[]{"1", "Alpha Hub", "HOT_DESK", "10", "Wi-Fi, Power Outlets", "500", "—", "—"});
+        tableModel.addRow(new Object[]{"2", "Executive Suite", "PRIVATE_ROOM", "4", "AC, Locker, Whiteboard", "—", "3,000", "25,000"});
+        tableModel.addRow(new Object[]{"3", "Conference Hall", "MEETING_ROOM", "12", "Projector, AC, Wi-Fi", "800", "—", "—"});
+        tableModel.addRow(new Object[]{"4", "Flex Desk Area", "HOT_DESK", "20", "Wi-Fi, Standing Desks", "300", "—", "—"});
 
         JScrollPane scrollPane = new JScrollPane(roomTable);
-        scrollPane.setBorder(
-            BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 25));
         add(scrollPane, BorderLayout.CENTER);
 
         // ── Bottom booking panel ───────────────────────────
@@ -124,87 +106,92 @@ public class SpaceBrowserPanel extends JPanel {
     }
 
     private JPanel buildBookingPanel() {
-        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(Color.WHITE);
-        bottomPanel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(
-                    1, 0, 0, 0, Color.LIGHT_GRAY),
-                BorderFactory.createEmptyBorder(
-                    15, 15, 15, 15)));
+        bottomPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(230, 230, 230)),
+            BorderFactory.createEmptyBorder(20, 25, 25, 25)
+        ));
 
+        // Header
+        JPanel header = new JPanel(new BorderLayout());
+        header.setOpaque(false);
+        JLabel bTitle = new JLabel("Book Selected Space");
+        bTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        bTitle.setForeground(com.trinova.scms.util.UIConfig.NAVY_DARK);
+        header.add(bTitle, BorderLayout.NORTH);
+        
+        JLabel bSub = new JLabel("Selected: Alpha Hub (HOT_DESK)");
+        bSub.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        bSub.setForeground(Color.GRAY);
+        header.add(bSub, BorderLayout.SOUTH);
+        bottomPanel.add(header, BorderLayout.NORTH);
+
+        // Form Row 1: Type and Note
+        JPanel form = new JPanel(new GridBagLayout());
+        form.setOpaque(false);
+        form.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 8, 5, 8);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(5, 0, 5, 15);
 
-        // Row 0: booking type selector
         gbc.gridx = 0; gbc.gridy = 0;
-        bottomPanel.add(new JLabel("Booking Type:"), gbc);
-
-        bookingTypeCombo = new JComboBox<>(
-            new String[]{"HOURLY"});
-        bookingTypeCombo.setFont(
-            new Font("Segoe UI", Font.PLAIN, 13));
+        form.add(new JLabel("Booking Type:"), gbc);
+        
         gbc.gridx = 1;
-        bottomPanel.add(bookingTypeCombo, gbc);
+        bookingTypeCombo = new JComboBox<>(new String[]{"HOURLY", "DAILY", "MONTHLY"});
+        bookingTypeCombo.setPreferredSize(new Dimension(120, 32));
+        form.add(bookingTypeCombo, gbc);
 
-        bookingTypeNote = new JLabel(
-            "Select date and time below");
-        bookingTypeNote.setFont(
-            new Font("Segoe UI", Font.ITALIC, 11));
-        bookingTypeNote.setForeground(Color.GRAY);
-        gbc.gridx = 2; gbc.gridwidth = 3;
-        bottomPanel.add(bookingTypeNote, gbc);
-        gbc.gridwidth = 1;
+        gbc.gridx = 2;
+        JLabel note = new JLabel("Select date and time below");
+        note.setFont(new Font("Segoe UI", Font.ITALIC, 11));
+        note.setForeground(Color.GRAY);
+        form.add(note, gbc);
 
-        // Row 1: hourly fields panel
-        hourlyFields = new JPanel(
-            new FlowLayout(FlowLayout.LEFT, 8, 0));
-        hourlyFields.setBackground(Color.WHITE);
+        // Row 2: Fields
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 8;
+        gbc.insets = new Insets(10, 0, 10, 0);
+        JPanel fieldsRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
+        fieldsRow.setOpaque(false);
+        
+        fieldsRow.add(createFieldGroup("Date", "YYYY-MM-DD", 100));
+        fieldsRow.add(createFieldGroup("Start", "HH:MM", 60));
+        fieldsRow.add(createFieldGroup("End", "HH:MM", 60));
+        fieldsRow.add(createFieldGroup("Promo", "Code (opt.)", 80));
+        
+        form.add(fieldsRow, gbc);
 
-        hourlyFields.add(new JLabel("Date (YYYY-MM-DD):"));
-        dateField = new JTextField(
-            LocalDate.now().toString(), 12);
-        hourlyFields.add(dateField);
+        // Footer Row: Status and Button
+        gbc.gridy = 2; gbc.gridwidth = 4;
+        statusLabel = new JLabel("Fill in the details above to book.");
+        statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        statusLabel.setForeground(Color.GRAY);
+        form.add(statusLabel, gbc);
 
-        hourlyFields.add(new JLabel("  Start (HH:MM):"));
-        startField = new JTextField("09:00", 7);
-        hourlyFields.add(startField);
-
-        hourlyFields.add(new JLabel("  End (HH:MM):"));
-        endField = new JTextField("17:00", 7);
-        hourlyFields.add(endField);
-
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 6;
-        bottomPanel.add(hourlyFields, gbc);
-        gbc.gridwidth = 1;
-
-        // Row 2: status + book button
-        statusLabel = new JLabel(
-            " ", SwingConstants.LEFT);
-        statusLabel.setFont(
-            new Font("Segoe UI", Font.PLAIN, 12));
-        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 4;
-        bottomPanel.add(statusLabel, gbc);
-
-        JButton bookBtn = new JButton(
-            "Book Selected Space →");
-        bookBtn.setBackground(new Color(16, 64, 110));
+        gbc.gridx = 4; gbc.gridwidth = 4; gbc.anchor = GridBagConstraints.EAST;
+        JButton bookBtn = new JButton("Book Selected Space →");
+        bookBtn.setBackground(com.trinova.scms.util.UIConfig.NAVY_DARK);
         bookBtn.setForeground(Color.WHITE);
         bookBtn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        bookBtn.setFocusPainted(false);
-        bookBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        bookBtn.setPreferredSize(new Dimension(200, 36));
-        gbc.gridx = 4; gbc.gridy = 2; gbc.gridwidth = 2;
-        bottomPanel.add(bookBtn, gbc);
+        bookBtn.setPreferredSize(new Dimension(200, 38));
+        bookBtn.putClientProperty("FlatLaf.style", "arc: 8");
+        form.add(bookBtn, gbc);
 
-        // Booking type changes form
-        bookingTypeCombo.addActionListener(e ->
-            updateTimeFields());
-
-        bookBtn.addActionListener(e -> handleBooking());
-
+        bottomPanel.add(form, BorderLayout.CENTER);
         return bottomPanel;
+    }
+
+    private JPanel createFieldGroup(String label, String placeholder, int width) {
+        JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        p.setOpaque(false);
+        p.add(new JLabel(label));
+        JTextField txt = new JTextField();
+        txt.setPreferredSize(new Dimension(width, 32));
+        txt.putClientProperty("FlatLaf.placeholderText", placeholder);
+        txt.putClientProperty("FlatLaf.style", "arc: 8");
+        p.add(txt);
+        return p;
     }
 
     private void updateBookingForm(String filter) {

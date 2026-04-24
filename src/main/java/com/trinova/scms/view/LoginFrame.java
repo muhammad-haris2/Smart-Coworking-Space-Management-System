@@ -34,7 +34,9 @@ public class LoginFrame extends JFrame {
         JLabel titleLabel = new JLabel("SCMS — Sign In", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titleLabel.setForeground(new Color(16, 64, 110));
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
         mainPanel.add(titleLabel, gbc);
 
         // Subtitle
@@ -49,7 +51,9 @@ public class LoginFrame extends JFrame {
         mainPanel.add(new JSeparator(), gbc);
 
         // Email label
-        gbc.gridwidth = 1; gbc.gridy = 3; gbc.gridx = 0;
+        gbc.gridwidth = 1;
+        gbc.gridy = 3;
+        gbc.gridx = 0;
         gbc.insets = new Insets(6, 0, 2, 10);
         mainPanel.add(new JLabel("Email:"), gbc);
 
@@ -60,7 +64,8 @@ public class LoginFrame extends JFrame {
         mainPanel.add(emailField, gbc);
 
         // Password label
-        gbc.gridy = 4; gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridx = 0;
         mainPanel.add(new JLabel("Password:"), gbc);
 
         // Password field
@@ -73,7 +78,9 @@ public class LoginFrame extends JFrame {
         statusLabel = new JLabel(" ", SwingConstants.CENTER);
         statusLabel.setForeground(Color.RED);
         statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
         gbc.insets = new Insets(4, 0, 4, 0);
         mainPanel.add(statusLabel, gbc);
 
@@ -128,24 +135,42 @@ public class LoginFrame extends JFrame {
             return;
         }
 
-        try {
-            AuthService auth = new AuthService();
-            Member member = auth.login(email, password);
-            statusLabel.setForeground(new Color(0, 128, 0));
-            statusLabel.setText("Welcome, " + member.getFullName() + "!");
+        statusLabel.setForeground(Color.GRAY);
+        statusLabel.setText("Logging in...");
 
-            if (member.getRole().equals("ADMIN")) {
-                new AdminDashboard(member).setVisible(true);
-            } else {
-                new MemberDashboard(member).setVisible(true);
+        // Use SwingWorker to prevent UI freeze
+        SwingWorker<Member, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Member doInBackground() throws Exception {
+                AuthService auth = new AuthService();
+                return auth.login(email, password);
             }
-            dispose();
 
-        } catch (Exception ex) {
-            statusLabel.setForeground(Color.RED);
-            statusLabel.setText(ex.getMessage());
-            passwordField.setText("");
-        }
+            @Override
+            protected void done() {
+                try {
+                    Member member = get();
+                    statusLabel.setForeground(new Color(0, 128, 0));
+                    statusLabel.setText("Welcome, " + member.getFullName() + "!");
+
+                    if (member.getRole().equals("ADMIN")) {
+                        new AdminDashboard(member).setVisible(true);
+                    } else {
+                        new MemberDashboard(member).setVisible(true);
+                    }
+                    dispose();
+                } catch (Exception ex) {
+                    statusLabel.setForeground(Color.RED);
+                    String msg = ex.getMessage();
+                    if (msg != null && msg.contains("Exception: ")) {
+                        msg = msg.substring(msg.indexOf("Exception: ") + 11);
+                    }
+                    statusLabel.setText(msg != null ? msg : "Login failed.");
+                    passwordField.setText("");
+                }
+            }
+        };
+        worker.execute();
     }
 
     private void openRegister() {
