@@ -126,19 +126,38 @@ public class RegisterFrame extends JFrame {
         String password = new String(passwordField.getPassword());
         String confirm  = new String(confirmPasswordField.getPassword());
 
-        try {
-            AuthService auth = new AuthService();
-            auth.register(name, email, password, confirm);
-            statusLabel.setForeground(new Color(0, 128, 0));
-            statusLabel.setText("Account created! Please login.");
-            JOptionPane.showMessageDialog(this,
-                "Registration successful!\nA verification email has been sent to: " + email,
-                "Success", JOptionPane.INFORMATION_MESSAGE);
-            goBack();
-        } catch (Exception ex) {
-            statusLabel.setForeground(Color.RED);
-            statusLabel.setText(ex.getMessage());
-        }
+        statusLabel.setForeground(Color.GRAY);
+        statusLabel.setText("Registering...");
+        
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                AuthService auth = new AuthService();
+                auth.register(name, email, password, confirm);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    get();
+                    statusLabel.setForeground(new Color(0, 128, 0));
+                    statusLabel.setText("Account created! Please login.");
+                    JOptionPane.showMessageDialog(RegisterFrame.this,
+                        "Registration successful!\nA verification email has been sent to: " + email,
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                    goBack();
+                } catch (Exception ex) {
+                    statusLabel.setForeground(Color.RED);
+                    String msg = ex.getMessage();
+                    if (msg != null && msg.contains("Exception: ")) {
+                        msg = msg.substring(msg.indexOf("Exception: ") + 11);
+                    }
+                    statusLabel.setText(msg != null ? msg : "Registration failed.");
+                }
+            }
+        };
+        worker.execute();
     }
 
     private void goBack() {
