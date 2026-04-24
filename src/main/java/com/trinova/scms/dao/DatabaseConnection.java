@@ -6,10 +6,11 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    private static final String URL = "jdbc:sqlserver://DESKTOP-C5ID6R4\\SQLEXPRESS;" +
-            "databaseName=CoworkingSpace_db;" +
-            "encrypt=true;" +
-            "trustServerCertificate=true;";
+    private static final String URL =
+        "jdbc:sqlserver://localhost\\SQLEXPRESS;" +
+        "databaseName=CoworkingSpace_db;" +
+        "encrypt=true;" +
+        "trustServerCertificate=true;";
 
     private static final String USER = "sa";
     private static final String PASS = "Scms@1234";
