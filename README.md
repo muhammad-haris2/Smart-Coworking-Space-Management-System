@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="<img width="677" height="369" alt="logo-removebg-preview" src="https://github.com/user-attachments/assets/b061db05-c135-46f5-9b1e-81c373429fbf" />
+  <img width="677" height="369" alt="logo-removebg-preview" src="https://github.com/user-attachments/assets/a11db0ef-5c29-48ad-8cf9-c97f0be21a72" />
 " alt="SCMS Banner" width="100%"/>
 </p>
 
