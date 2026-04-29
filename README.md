@@ -493,42 +493,78 @@ mvn test
 
 ## 📸 Screenshots
 
-<img width="764" height="900" alt="image" src="https://github.com/user-attachments/assets/d7f34d91-d211-482a-a1d0-a1f9a324fbe2" />
-<img width="1919" height="1004" alt="image" src="https://github.com/user-attachments/assets/fd67bf1c-b1e7-4800-bf16-2c2cff13515d" />
-<img width="1919" height="1007" alt="image" src="https://github.com/user-attachments/assets/6331f949-2a46-42bf-9887-fbc42a08b392" />
-<img width="1917" height="1007" alt="image" src="https://github.com/user-attachments/assets/ba7dc8d9-8f11-4cce-9ad3-4a664694f4f2" />
-<img width="1919" height="1011" alt="image" src="https://github.com/user-attachments/assets/b77d2591-95fa-491e-ae39-4abae59cd21e" />
-<img width="1919" height="1009" alt="image" src="https://github.com/user-attachments/assets/14f635d2-5f3f-4e3d-be08-a5cc768da8fb" />
-<img width="1919" height="1010" alt="image" src="https://github.com/user-attachments/assets/c10560ba-96fa-46cf-8cba-e11bc2332d24" />
-<img width="1917" height="1003" alt="image" src="https://github.com/user-attachments/assets/fea494f1-a0ac-496c-bbad-f2364e59ec3a" />
-<img width="1919" height="1006" alt="image" src="https://github.com/user-attachments/assets/b1a81e95-6f66-4e55-84de-21a04629a3f5" />
-<img width="1919" height="1009" alt="image" src="https://github.com/user-attachments/assets/94df51da-2b29-4f9e-acae-5b03a4544183" />
+### 🔑 Login Screen
+> Dark gradient background with a centered rounded card form, email/password fields, validation feedback, and links to registration and password recovery.
 
-
-
-
-
-
-
-
-
-
-| Screen | Description |
-|---|---|
-| **Login** | Dark gradient background with rounded card form and validation feedback |
-| **Registration** | Full registration with password strength enforcement |
-| **Member Dashboard** | Gradient greeting card with plan status, sidebar navigation |
-| **Browse Spaces** | Filter by room type, view details, and book with one click |
-| **Cost Preview** | Booking summary with facility add-ons and live cost breakdown |
-| **Subscription Plans** | Side-by-side plan cards with gradient headers and benefit lists |
-| **My Invoices** | Styled table with sortable invoice history |
-| **Admin Dashboard** | Stat cards with member/space/booking counts |
-| **Manage Spaces** | Full CRUD table with add/edit/deactivate dialogs |
-| **Occupancy Report** | Date-grouped report with PDF/DOCX/TXT export |
-| **Member Directory** | Searchable member list with lock/unlock controls |
-| **Promo Codes** | Admin promo code management with toggle active/inactive |
+<img width="764" height="900" alt="Login Screen" src="https://github.com/user-attachments/assets/d7f34d91-d211-482a-a1d0-a1f9a324fbe2" />
 
 ---
+
+### 🏠 Member Dashboard
+> Welcome panel with a gradient greeting card showing the logged-in member's name, role, email, and active subscription plan status. Sidebar navigation provides access to all member features.
+
+<img width="1919" height="1004" alt="Member Dashboard" src="https://github.com/user-attachments/assets/fd67bf1c-b1e7-4800-bf16-2c2cff13515d" />
+
+---
+
+### 🔍 Browse Spaces
+> Space browser with room type filter tabs (Hot Desk, Meeting Room, Private Room). Each room is displayed as a rich detail card with capacity, amenities, pricing, and a one-click booking button.
+
+<img width="1919" height="1007" alt="Browse Spaces" src="https://github.com/user-attachments/assets/6331f949-2a46-42bf-9887-fbc42a08b392" />
+
+---
+
+### 📋 My Bookings
+> Personal booking history table with columns for booking ID, space, type, date, time, cost, and status. Members can cancel active bookings with a mandatory reason.
+
+<img width="1917" height="1007" alt="My Bookings" src="https://github.com/user-attachments/assets/ba7dc8d9-8f11-4cce-9ad3-4a664694f4f2" />
+
+---
+
+### 💎 Subscription Plans
+> Side-by-side plan comparison cards with gradient headers, pricing, benefit lists, and a subscribe & pay button. The currently active plan is highlighted with a green border and "ACTIVE" badge.
+
+<img width="1919" height="1011" alt="Subscription Plans" src="https://github.com/user-attachments/assets/b77d2591-95fa-491e-ae39-4abae59cd21e" />
+
+---
+
+### 🧾 My Invoices
+> Personal invoice ledger with a styled table showing invoice ID, booking ID, space, type, base amount, facility cost, VAT, total, and issue date for every booking.
+
+<img width="1919" height="1009" alt="My Invoices" src="https://github.com/user-attachments/assets/14f635d2-5f3f-4e3d-be08-a5cc768da8fb" />
+
+---
+
+### 🛡️ Admin Dashboard
+> Admin control panel with quick stat cards showing total members, total spaces, and total bookings. Sidebar provides access to all 7 admin management sections.
+
+<img width="1919" height="1010" alt="Admin Dashboard" src="https://github.com/user-attachments/assets/c10560ba-96fa-46cf-8cba-e11bc2332d24" />
+
+---
+
+### 🏢 Manage Spaces (Admin)
+> Full CRUD table for coworking spaces with columns for ID, name, type, capacity, size, hourly/daily/monthly pricing, and active status. Admins can add, edit, and deactivate rooms.
+
+<img width="1917" height="1003" alt="Manage Spaces" src="https://github.com/user-attachments/assets/fea494f1-a0ac-496c-bbad-f2364e59ec3a" />
+
+---
+
+### 📊 Occupancy Report (Admin)
+> Date-grouped occupancy data with hot desk, meeting room, and private room booking counts, total bookings, and revenue per day. Reports can be exported as PDF, Word, or TXT.
+
+<img width="1919" height="1006" alt="Occupancy Report" src="https://github.com/user-attachments/assets/b1a81e95-6f66-4e55-84de-21a04629a3f5" />
+
+---
+
+### 👥 Member Directory (Admin)
+> Searchable member list with ID, name, email, phone, role, plan, plan expiry, and join date. Admins can search by name/email and lock or unlock member accounts.
+
+<img width="1919" height="1009" alt="Member Directory" src="https://github.com/user-attachments/assets/94df51da-2b29-4f9e-acae-5b03a4544183" />
+
+---
+
+---
+
 
 ## 🗺 Development Roadmap
 
