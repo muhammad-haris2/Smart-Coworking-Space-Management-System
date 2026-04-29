@@ -5,7 +5,7 @@
 <h1 align="center">🏢 Smart Coworking Space Management System (SCMS)</h1>
 
 <p align="center">
-  <em>A robust Java desktop application for managing modern coworking spaces — built with love by <strong>Trinova Tech</strong></em>
+  <em>A feature-complete Java desktop application for managing modern coworking spaces — built with ❤️ by <strong>Trinova Tech</strong></em>
 </p>
 
 <p align="center">
@@ -18,9 +18,10 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Architecture-MVC-blue?style=flat-square" alt="MVC"/>
-  <img src="https://img.shields.io/badge/Design_Pattern-Singleton_|_DAO-blueviolet?style=flat-square" alt="Design Patterns"/>
+  <img src="https://img.shields.io/badge/Design_Pattern-Singleton_|_DAO_|_Service_Layer_|_Factory-blueviolet?style=flat-square" alt="Design Patterns"/>
   <img src="https://img.shields.io/badge/Security-BCrypt-orange?style=flat-square" alt="BCrypt"/>
   <img src="https://img.shields.io/badge/Testing-JUnit_5-25A162?style=flat-square" alt="JUnit 5"/>
+  <img src="https://img.shields.io/badge/Status-Complete-brightgreen?style=flat-square" alt="Complete"/>
 </p>
 
 ---
@@ -34,6 +35,7 @@
 - [Project Structure](#-project-structure)
 - [Database Schema](#-database-schema)
 - [Getting Started](#-getting-started)
+- [Running Tests](#-running-tests)
 - [Screenshots](#-screenshots)
 - [Development Roadmap](#-development-roadmap)
 - [Team — Trinova Tech](#-team--trinova-tech)
@@ -44,9 +46,11 @@
 
 ## 🌟 Overview
 
-**SCMS** is a comprehensive desktop application designed to streamline the operations of a modern coworking space. From member registration and authentication to room browsing and booking management, SCMS provides an intuitive interface for both **members** and **administrators**.
+**SCMS** is a comprehensive, production-ready desktop application designed to streamline every aspect of modern coworking space operations. The system covers the full lifecycle — from member registration and secure authentication, through space browsing and real-time booking with smart cost calculation, to subscription management, invoice generation, payment processing, and administrative reporting.
 
-> Built as a **Software Engineering Semester Project** following industry-standard practices including MVC architecture, the DAO pattern, Singleton database connections, and secure password hashing.
+Both **Members** and **Administrators** get dedicated, role-based dashboards with a modern dark-themed UI featuring gradient backgrounds, rounded cards, animated sidebar navigation, and a centralized design system (`UITheme`).
+
+> Built as a **Software Engineering Semester Project** following industry-standard practices including MVC architecture, the DAO pattern, Singleton database connections, Service Layer abstraction, Factory methods for UI components, and comprehensive JUnit 5 testing.
 
 ---
 
@@ -64,19 +68,58 @@
 ### 🏠 Space & Booking Management
 | Feature | Description |
 |---|---|
-| **Space Browser** | Browse available rooms filtered by type (Hot Desk, Meeting Room, Private Office, etc.) |
+| **Space Browser** | Browse available rooms filtered by type (Hot Desk, Meeting Room, Private Office) with rich detail cards |
 | **Real-Time Booking** | Book rooms with date-time slots; automatic conflict detection prevents double-booking |
-| **Booking History** | View all past and active bookings with full details |
-| **Cancellation** | Cancel bookings with mandatory reason tracking |
-| **Room CRUD** | Admins can add, update, and soft-delete rooms |
+| **Booking Types** | Support for hourly, daily, and monthly booking modes depending on room type |
+| **Cost Preview** | Interactive booking summary with live cost breakdown before confirmation |
+| **Facility Add-Ons** | Select optional extras (coffee, printing, lockers, parking) with plan-aware free/paid indicators |
+| **Booking History** | View all past and active bookings with full details and status tracking |
+| **Cancellation** | Cancel bookings with mandatory reason tracking and email notification |
+| **Room CRUD** | Admins can add, update, and soft-delete (deactivate) rooms with validation |
 
-### 👤 User Experience
+### 💳 Subscription & Billing
 | Feature | Description |
 |---|---|
-| **Role-Based Dashboards** | Separate Member and Admin dashboards with tailored functionality |
-| **Profile Management** | Members can update name, phone, bio, and profile photo |
-| **Sidebar Navigation** | Intuitive card-layout based navigation between sections |
-| **Modern UI** | Clean, professional Swing interface with custom color schemes |
+| **Subscription Plans** | Basic & Premium plans with tiered benefits (free desk hours, meeting room credits, facility perks) |
+| **Smart Cost Calculator** | Plan-aware pricing engine: free hours for Basic, unlimited desk for Premium, VAT calculation (17%) |
+| **Promo Codes** | Percentage and flat-amount discount codes with usage tracking; admin CRUD management |
+| **Payment Processing** | Simulated multi-method payments (Visa, Mastercard, Digital Wallet) with transaction references |
+| **Auto-Invoicing** | Invoices auto-generated for every booking with base, facility, VAT, and total breakdowns |
+| **Invoice History** | Members view their own invoices; admins view all invoices system-wide |
+
+### 📊 Admin Dashboard
+| Feature | Description |
+|---|---|
+| **Quick Stats** | Real-time counts of members, spaces, and bookings on the admin home panel |
+| **All Bookings** | View and cancel any booking system-wide with reason tracking |
+| **All Invoices** | Browse every invoice across all members |
+| **Manage Spaces** | Full CRUD for coworking spaces (add/edit/deactivate) with active-booking protection |
+| **Promo Codes** | Create, toggle active/inactive, and track usage of promotional discount codes |
+| **Occupancy Report** | Generate daily occupancy data grouped by room type with totals and revenue |
+| **Report Export** | Download occupancy reports in **PDF** (PDFBox), **Word** (Apache POI), or **TXT** formats |
+| **Member Directory** | Search, browse, and lock/unlock member accounts |
+
+### 👤 Member Dashboard
+| Feature | Description |
+|---|---|
+| **Role-Based Dashboard** | Dedicated member home with greeting card, plan status, and sidebar navigation |
+| **Browse Spaces** | Filter and book from available Hot Desks, Meeting Rooms, and Private Rooms |
+| **My Bookings** | Personal booking history with cancellation support |
+| **Subscription** | View and subscribe to Basic/Premium plans with live plan comparison cards |
+| **My Invoices** | Personal invoice ledger with detailed cost breakdowns |
+| **My Profile** | Update name, phone, bio, and view account info |
+
+### 🎨 UI & Design System
+| Feature | Description |
+|---|---|
+| **Centralized UITheme** | Single `UITheme.java` class with 50+ design tokens (colors, fonts, dimensions) and factory methods |
+| **Dark Theme** | Premium dark gradient backgrounds for top bars and sidebars |
+| **Rounded Cards** | Custom-painted `JPanel` components with `RoundRectangle2D` corners |
+| **Gradient Buttons** | Primary action buttons with gradient paint and hand cursors |
+| **Styled Tables** | Alternating row colors, dark headers, selection highlighting |
+| **Initials Avatar** | Auto-generated circular avatar with user initials |
+| **Stat Cards** | Color-coded metric cards with accent stripes and icon circles |
+| **Hover Effects** | Sidebar buttons with translucent hover highlights |
 
 ---
 
@@ -85,23 +128,27 @@
 SCMS follows the **Model-View-Controller (MVC)** architectural pattern with additional design patterns for maintainability and scalability:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                        VIEW LAYER                       │
-│    LoginFrame │ RegisterFrame │ MemberDashboard │ Admin │
-│    ForgotPasswordFrame │ SpaceBrowserPanel │ Booking    │
-├─────────────────────────────────────────────────────────┤
-│                      SERVICE LAYER                      │
-│           AuthService  │  BookingService                │
-│     (Business Logic, Validations, Orchestration)        │
-├─────────────────────────────────────────────────────────┤
-│                    DAO / DATA LAYER                     │
-│        MemberDAO  │  RoomDAO  │  BookingDAO             │
-│         DatabaseConnection (Singleton Pattern)          │
-├─────────────────────────────────────────────────────────┤
-│                       DATABASE                          │
-│              Microsoft SQL Server Express               │
-│             Database: CoworkingSpace_db                 │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────┐
+│                            VIEW LAYER                                │
+│  LoginFrame │ RegisterFrame │ ForgotPasswordFrame                    │
+│  MemberDashboard │ AdminDashboard │ SpaceBrowserPanel               │
+│  BookingHistoryPanel │ SubscriptionPanel │ InvoicePanel              │
+│  CostPreviewFrame │ UITheme (Factory)                                │
+├──────────────────────────────────────────────────────────────────────┤
+│                          SERVICE LAYER                               │
+│  AuthService │ BookingService │ BillingService │ CostCalculatorService│
+│  ReportExporter (PDF / DOCX / TXT)                                   │
+│            (Business Logic, Validations, Orchestration)              │
+├──────────────────────────────────────────────────────────────────────┤
+│                        DAO / DATA LAYER                              │
+│  MemberDAO │ RoomDAO │ BookingDAO │ InvoiceDAO                       │
+│  SubscriptionDAO │ PaymentDAO │ FacilityDAO                          │
+│           DatabaseConnection (Singleton Pattern)                     │
+├──────────────────────────────────────────────────────────────────────┤
+│                           DATABASE                                   │
+│                   Microsoft SQL Server Express                       │
+│                  Database: CoworkingSpace_db                         │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Design Patterns Used
@@ -109,9 +156,10 @@ SCMS follows the **Model-View-Controller (MVC)** architectural pattern with addi
 | Pattern | Where | Purpose |
 |---|---|---|
 | **MVC** | Entire Application | Separation of concerns between UI, logic, and data |
-| **Singleton** | `DatabaseConnection` | Single shared database connection instance |
-| **DAO** | `MemberDAO`, `RoomDAO`, `BookingDAO` | Encapsulates data access; abstracts SQL from business logic |
-| **Service Layer** | `AuthService`, `BookingService` | Centralizes business rules and validation |
+| **Singleton** | `DatabaseConnection` | Single shared database connection instance across all DAOs |
+| **DAO** | `MemberDAO`, `RoomDAO`, `BookingDAO`, `InvoiceDAO`, `SubscriptionDAO`, `PaymentDAO`, `FacilityDAO` | Encapsulates data access; abstracts SQL from business logic |
+| **Service Layer** | `AuthService`, `BookingService`, `BillingService`, `CostCalculatorService` | Centralizes business rules, validations, and cross-cutting concerns |
+| **Factory Method** | `UITheme` | Produces styled UI components (`primaryButton()`, `cardPanel()`, `styledField()`, etc.) |
 
 ---
 
@@ -120,12 +168,13 @@ SCMS follows the **Model-View-Controller (MVC)** architectural pattern with addi
 | Layer | Technology | Version |
 |---|---|---|
 | **Language** | Java (OpenJDK) | 17 |
-| **GUI** | Java Swing | — |
+| **GUI** | Java Swing + Custom Design System (`UITheme`) | — |
 | **Build Tool** | Apache Maven | 3.9+ |
 | **Database** | Microsoft SQL Server Express | 2019+ |
 | **JDBC Driver** | `mssql-jdbc` | 12.4.2 |
 | **Password Hashing** | jBCrypt | 0.4.3 |
 | **PDF Generation** | Apache PDFBox | 3.0.1 |
+| **Word Generation** | Apache POI (OOXML) | 5.2.5 |
 | **Unit Testing** | JUnit Jupiter | 5.10.0 |
 | **Packaging** | Maven Shade Plugin (Fat JAR) | 3.5.0 |
 
@@ -136,50 +185,76 @@ SCMS follows the **Model-View-Controller (MVC)** architectural pattern with addi
 ```
 Smart-Coworking-Space-Management-System/
 │
-├── pom.xml                                    # Maven build configuration
-├── README.md                                  # Project documentation
+├── pom.xml                                        # Maven build configuration
+├── README.md                                      # Project documentation
 │
-└── src/
-    └── main/
-        └── java/
-            └── com/trinova/scms/
-                │
-                ├── Main.java                  # Application entry point
-                │
-                ├── model/                     # Data models (POJOs)
-                │   ├── Member.java            # User entity with auth fields
-                │   ├── Room.java              # Coworking space entity
-                │   └── Booking.java           # Booking entity with status tracking
-                │
-                ├── dao/                       # Data Access Objects
-                │   ├── DatabaseConnection.java# Singleton DB connection manager
-                │   ├── MemberDAO.java         # Member CRUD + auth operations
-                │   ├── RoomDAO.java           # Room CRUD + availability queries
-                │   └── BookingDAO.java        # Booking CRUD + conflict detection
-                │
-                ├── service/                   # Business logic layer
-                │   ├── AuthService.java       # Login, registration, password reset
-                │   └── BookingService.java    # Booking & cancellation workflow
-                │
-                ├── util/                      # Utility classes
-                │   ├── PasswordUtil.java      # BCrypt hash & verify wrapper
-                │   └── EmailSimulator.java    # Console-based email simulation
-                │
-                └── view/                      # Swing GUI components
-                    ├── LoginFrame.java        # Login screen
-                    ├── RegisterFrame.java     # Registration form
-                    ├── ForgotPasswordFrame.java # Password recovery
-                    ├── MemberDashboard.java   # Member home with sidebar nav
-                    ├── AdminDashboard.java    # Admin control panel
-                    ├── SpaceBrowserPanel.java # Room browsing & booking
-                    └── BookingHistoryPanel.java# Booking history & cancellation
+├── src/
+│   ├── main/
+│   │   └── java/
+│   │       └── com/trinova/scms/
+│   │           │
+│   │           ├── Main.java                      # Application entry point
+│   │           │
+│   │           ├── model/                         # Data models (POJOs)
+│   │           │   ├── Member.java                # User entity with auth, plan, and profile fields
+│   │           │   ├── Room.java                  # Coworking space entity (Hot Desk/Meeting/Private)
+│   │           │   ├── Booking.java               # Booking entity with cost tracking & status
+│   │           │   ├── SubscriptionPlan.java       # Plan entity (Basic / Premium)
+│   │           │   ├── Invoice.java               # Invoice entity with VAT & facility breakdown
+│   │           │   ├── Payment.java               # Payment record entity
+│   │           │   ├── PromoCode.java             # Promo code entity (Percentage / Flat)
+│   │           │   └── Facility.java              # Add-on facility entity with plan-aware pricing
+│   │           │
+│   │           ├── dao/                           # Data Access Objects
+│   │           │   ├── DatabaseConnection.java    # Singleton DB connection manager
+│   │           │   ├── MemberDAO.java             # Member CRUD + auth + profile operations
+│   │           │   ├── RoomDAO.java               # Room CRUD + availability queries
+│   │           │   ├── BookingDAO.java            # Booking CRUD + conflict detection + usage queries
+│   │           │   ├── InvoiceDAO.java            # Invoice creation + retrieval by member/all
+│   │           │   ├── SubscriptionDAO.java       # Plan management + promo code CRUD
+│   │           │   ├── PaymentDAO.java            # Payment recording for bookings & subscriptions
+│   │           │   └── FacilityDAO.java           # Facility listing + booking-facility linking
+│   │           │
+│   │           ├── service/                       # Business logic layer
+│   │           │   ├── AuthService.java           # Login, registration, lockout, password reset
+│   │           │   ├── BookingService.java        # Booking & cancellation workflow with invoicing
+│   │           │   ├── BillingService.java        # Invoice generation, promo codes, plan assignment
+│   │           │   ├── CostCalculatorService.java # Smart plan-aware cost engine (Base + Facilities + VAT)
+│   │           │   └── ReportExporter.java        # Occupancy report export (PDF / DOCX / TXT)
+│   │           │
+│   │           ├── util/                          # Utility classes
+│   │           │   ├── PasswordUtil.java          # BCrypt hash & verify wrapper
+│   │           │   └── EmailSimulator.java        # Console-based email simulation
+│   │           │
+│   │           └── view/                          # Swing GUI components
+│   │               ├── UITheme.java               # Centralized design system (colors, fonts, factories)
+│   │               ├── LoginFrame.java            # Login screen with validation feedback
+│   │               ├── RegisterFrame.java         # Registration form with password strength
+│   │               ├── ForgotPasswordFrame.java   # Token-based password recovery
+│   │               ├── MemberDashboard.java       # Member home with sidebar navigation
+│   │               ├── AdminDashboard.java        # Admin control panel (7 management sections)
+│   │               ├── SpaceBrowserPanel.java     # Room browsing, filtering & booking
+│   │               ├── BookingHistoryPanel.java   # Booking history & cancellation
+│   │               ├── CostPreviewFrame.java      # Booking cost preview with facility add-ons
+│   │               ├── SubscriptionPanel.java     # Plan comparison cards & subscription payment
+│   │               └── InvoicePanel.java          # Personal invoice ledger
+│   │
+│   └── test/
+│       └── java/
+│           └── com/trinova/scms/
+│               ├── model/
+│               │   └── ModelValidationTest.java   # Model field validation tests
+│               └── service/
+│                   ├── BookingValidationTest.java  # Booking logic validation tests
+│                   ├── BillingServiceTest.java     # Billing & promo code tests
+│                   └── CostCalculatorServiceTest.java # Cost calculation tests
 ```
 
 ---
 
 ## 💾 Database Schema
 
-The application uses **Microsoft SQL Server Express** with the database `CoworkingSpace_db`. Below is the schema:
+The application uses **Microsoft SQL Server Express** with the database `CoworkingSpace_db`. Below is the complete schema:
 
 ### `members` Table
 ```sql
@@ -193,6 +268,7 @@ CREATE TABLE members (
     bio             NVARCHAR(500),
     profile_photo   NVARCHAR(255),
     plan_id         INT,
+    plan_expiry     DATE,
     is_locked       BIT            DEFAULT 0,
     failed_attempts INT            DEFAULT 0
 );
@@ -201,25 +277,111 @@ CREATE TABLE members (
 ### `rooms` Table
 ```sql
 CREATE TABLE rooms (
-    room_id    INT IDENTITY(1,1) PRIMARY KEY,
-    room_name  NVARCHAR(100)  NOT NULL,
-    room_type  NVARCHAR(50)   NOT NULL,
-    capacity   INT            NOT NULL,
-    amenities  NVARCHAR(500),
-    is_active  BIT            DEFAULT 1
+    room_id       INT IDENTITY(1,1) PRIMARY KEY,
+    room_name     NVARCHAR(100)  NOT NULL,
+    room_type     NVARCHAR(50)   NOT NULL,       -- HOT_DESK, MEETING_ROOM, PRIVATE_ROOM
+    capacity      INT            NOT NULL,
+    amenities     NVARCHAR(500),
+    private_size  NVARCHAR(20),                   -- SMALL, MEDIUM, LARGE (for private rooms)
+    hourly_price  DECIMAL(10,2)  DEFAULT 0,
+    daily_price   DECIMAL(10,2)  DEFAULT 0,
+    monthly_price DECIMAL(10,2)  DEFAULT 0,
+    is_active     BIT            DEFAULT 1
 );
 ```
 
 ### `bookings` Table
 ```sql
 CREATE TABLE bookings (
-    booking_id    INT IDENTITY(1,1) PRIMARY KEY,
+    booking_id     INT IDENTITY(1,1) PRIMARY KEY,
+    member_id      INT            NOT NULL REFERENCES members(member_id),
+    room_id        INT            NOT NULL REFERENCES rooms(room_id),
+    booking_type   NVARCHAR(20)   NOT NULL,       -- HOURLY, DAILY, MONTHLY
+    start_time     DATETIME       NOT NULL,
+    end_time       DATETIME       NOT NULL,
+    duration_hours DECIMAL(10,2),
+    base_cost      DECIMAL(10,2)  DEFAULT 0,
+    facility_cost  DECIMAL(10,2)  DEFAULT 0,
+    vat_amount     DECIMAL(10,2)  DEFAULT 0,
+    total_cost     DECIMAL(10,2)  DEFAULT 0,
+    status         NVARCHAR(20)   DEFAULT 'CONFIRMED',
+    cancel_reason  NVARCHAR(500)
+);
+```
+
+### `subscription_plans` Table
+```sql
+CREATE TABLE subscription_plans (
+    plan_id       INT IDENTITY(1,1) PRIMARY KEY,
+    plan_name     NVARCHAR(100)  NOT NULL,
+    plan_type     NVARCHAR(20)   NOT NULL,        -- BASIC, PREMIUM
+    duration_days INT            NOT NULL,
+    price         DECIMAL(10,2)  NOT NULL
+);
+```
+
+### `invoices` Table
+```sql
+CREATE TABLE invoices (
+    invoice_id    INT IDENTITY(1,1) PRIMARY KEY,
+    booking_id    INT            NOT NULL REFERENCES bookings(booking_id),
     member_id     INT            NOT NULL REFERENCES members(member_id),
-    room_id       INT            NOT NULL REFERENCES rooms(room_id),
-    start_time    DATETIME       NOT NULL,
-    end_time      DATETIME       NOT NULL,
-    status        NVARCHAR(20)   DEFAULT 'ACTIVE',
-    cancel_reason NVARCHAR(500)
+    base_amount   DECIMAL(10,2)  NOT NULL,
+    facility_cost DECIMAL(10,2)  DEFAULT 0,
+    vat_amount    DECIMAL(10,2)  DEFAULT 0,
+    total_amount  DECIMAL(10,2)  NOT NULL,
+    issue_date    DATE           NOT NULL,
+    pdf_path      NVARCHAR(500)
+);
+```
+
+### `payments` Table
+```sql
+CREATE TABLE payments (
+    payment_id      INT IDENTITY(1,1) PRIMARY KEY,
+    member_id       INT            NOT NULL REFERENCES members(member_id),
+    booking_id      INT            REFERENCES bookings(booking_id),
+    subscription_id INT,
+    amount          DECIMAL(10,2)  NOT NULL,
+    payment_method  NVARCHAR(50)   NOT NULL,      -- Visa, Mastercard, Digital Wallet
+    status          NVARCHAR(20)   DEFAULT 'COMPLETED',
+    transaction_ref NVARCHAR(100),
+    paid_at         DATETIME       DEFAULT GETDATE()
+);
+```
+
+### `promo_codes` Table
+```sql
+CREATE TABLE promo_codes (
+    promo_id       INT IDENTITY(1,1) PRIMARY KEY,
+    code           NVARCHAR(50)   NOT NULL UNIQUE,
+    discount_type  NVARCHAR(20)   NOT NULL,       -- PERCENTAGE, FLAT
+    discount_value DECIMAL(10,2)  NOT NULL,
+    is_active      BIT            DEFAULT 1,
+    usage_count    INT            DEFAULT 0
+);
+```
+
+### `facilities` Table
+```sql
+CREATE TABLE facilities (
+    facility_id      INT IDENTITY(1,1) PRIMARY KEY,
+    facility_name    NVARCHAR(100)  NOT NULL,
+    price            DECIMAL(10,2)  NOT NULL,
+    unit             NVARCHAR(20)   NOT NULL,     -- per hour, per session, etc.
+    free_for_basic   BIT            DEFAULT 0,
+    free_for_premium BIT            DEFAULT 0
+);
+```
+
+### `booking_facilities` Table
+```sql
+CREATE TABLE booking_facilities (
+    id           INT IDENTITY(1,1) PRIMARY KEY,
+    booking_id   INT            NOT NULL REFERENCES bookings(booking_id),
+    facility_id  INT            NOT NULL REFERENCES facilities(facility_id),
+    quantity     INT            DEFAULT 1,
+    cost         DECIMAL(10,2)  DEFAULT 0
 );
 ```
 
@@ -250,14 +412,39 @@ cd Smart-Coworking-Space-Management-System
    ```sql
    CREATE DATABASE CoworkingSpace_db;
    ```
-3. Run the table creation scripts from the [Database Schema](#-database-schema) section above
-4. *(Optional)* Insert sample room data:
+3. Run all the table creation scripts from the [Database Schema](#-database-schema) section above
+4. Insert sample data:
    ```sql
-   INSERT INTO rooms (room_name, room_type, capacity, amenities) VALUES
-   ('Alpha Hub',       'HOT_DESK',       10, 'Wi-Fi, Power Outlets, Standing Desk'),
-   ('Brainstorm Room', 'MEETING_ROOM',    8, 'Projector, Whiteboard, Video Conferencing'),
-   ('Executive Suite', 'PRIVATE_OFFICE',  4, 'AC, Locker, Printer Access'),
-   ('Open Lounge',     'HOT_DESK',       20, 'Wi-Fi, Bean Bags, Coffee Machine');
+   -- Subscription Plans
+   INSERT INTO subscription_plans (plan_name, plan_type, duration_days, price) VALUES
+   ('Basic Plan',   'BASIC',   30, 3000),
+   ('Premium Plan', 'PREMIUM', 30, 7000);
+
+   -- Sample Rooms
+   INSERT INTO rooms (room_name, room_type, capacity, amenities, hourly_price) VALUES
+   ('Alpha Hub',       'HOT_DESK',     10, 'Wi-Fi, Power Outlets, Standing Desk', 200),
+   ('Brainstorm Room', 'MEETING_ROOM',  8, 'Projector, Whiteboard, Video Conferencing', 1000),
+   ('Open Lounge',     'HOT_DESK',     20, 'Wi-Fi, Bean Bags, Coffee Machine', 200);
+
+   INSERT INTO rooms (room_name, room_type, capacity, private_size, daily_price, monthly_price) VALUES
+   ('Executive Suite', 'PRIVATE_ROOM',  4, 'MEDIUM', 5000, 80000);
+
+   -- Sample Facilities
+   INSERT INTO facilities (facility_name, price, unit, free_for_basic, free_for_premium) VALUES
+   ('Coffee',        50,  'per cup',     0, 1),
+   ('Printing',     100,  'per 50 pages', 0, 1),
+   ('Locker',       200,  'per day',     0, 1),
+   ('Parking',      500,  'per day',     0, 1);
+
+   -- Sample Promo Codes
+   INSERT INTO promo_codes (code, discount_type, discount_value) VALUES
+   ('WELCOME10', 'PERCENTAGE', 10),
+   ('FLAT500',   'FLAT',       500);
+
+   -- Admin Account (password: Admin@123)
+   INSERT INTO members (full_name, email, password_hash, role) VALUES
+   ('System Admin', 'admin@scms.com',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN');
    ```
 
 ### 3️⃣ Configure Database Connection
@@ -286,31 +473,55 @@ Or run directly from your IDE by executing `com.trinova.scms.Main`.
 
 ---
 
+## 🧪 Running Tests
+
+The project includes JUnit 5 tests covering model validation, booking logic, billing, and cost calculation:
+
+```bash
+# Run all tests
+mvn test
+```
+
+| Test Class | Coverage Area |
+|---|---|
+| `ModelValidationTest` | Model field validation and entity integrity |
+| `BookingValidationTest` | Booking workflow validation and edge cases |
+| `BillingServiceTest` | Invoice generation and promo code application |
+| `CostCalculatorServiceTest` | Plan-aware cost calculation with VAT and facilities |
+
+---
+
 ## 📸 Screenshots
 
-> *Screenshots will be added as sprints progress.*
+> *Screenshots to be added.*
 
 | Screen | Description |
 |---|---|
-| **Login** | Clean sign-in form with validation feedback |
-| **Registration** | Full registration with password strength meter |
-| **Member Dashboard** | Sidebar navigation with space browsing and booking |
-| **Admin Dashboard** | Admin control panel with management tools |
-| **Space Browser** | Filter and book coworking spaces |
-| **Booking History** | View and cancel past bookings |
+| **Login** | Dark gradient background with rounded card form and validation feedback |
+| **Registration** | Full registration with password strength enforcement |
+| **Member Dashboard** | Gradient greeting card with plan status, sidebar navigation |
+| **Browse Spaces** | Filter by room type, view details, and book with one click |
+| **Cost Preview** | Booking summary with facility add-ons and live cost breakdown |
+| **Subscription Plans** | Side-by-side plan cards with gradient headers and benefit lists |
+| **My Invoices** | Styled table with sortable invoice history |
+| **Admin Dashboard** | Stat cards with member/space/booking counts |
+| **Manage Spaces** | Full CRUD table with add/edit/deactivate dialogs |
+| **Occupancy Report** | Date-grouped report with PDF/DOCX/TXT export |
+| **Member Directory** | Searchable member list with lock/unlock controls |
+| **Promo Codes** | Admin promo code management with toggle active/inactive |
 
 ---
 
 ## 🗺 Development Roadmap
 
-The project follows an **Agile Scrum** methodology with incremental sprints:
+The project followed an **Agile Scrum** methodology with incremental sprints:
 
 | Sprint | Focus Area | Status |
 |---|---|---|
 | **Sprint 1** | Core Auth (Login, Register, Password Reset) + DB Setup + MVC Foundation | ✅ Completed |
 | **Sprint 2** | Room Browsing, Booking Engine, Booking History, Cancellation | ✅ Completed |
-| **Sprint 3** | Subscription Plans, Promo Codes, Invoice Generation (PDFBox) | 🔄 In Progress |
-| **Sprint 4** | Admin — Manage Spaces, Occupancy Reports, Member Directory | 📋 Planned |
+| **Sprint 3** | Subscription Plans, Promo Codes, Cost Calculator, Facilities, Invoicing, Payment Processing | ✅ Completed |
+| **Sprint 4** | Admin Dashboard (Manage Spaces, Occupancy Reports, Member Directory, Report Export), UI Modernization & Design System | ✅ Completed |
 
 ---
 
