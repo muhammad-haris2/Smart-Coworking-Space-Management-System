@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="docs/assets/banner.png" alt="SCMS Banner" width="100%"/>
+  <img src="<img width="677" height="369" alt="logo-removebg-preview" src="https://github.com/user-attachments/assets/b061db05-c135-46f5-9b1e-81c373429fbf" />
+" alt="SCMS Banner" width="100%"/>
 </p>
 
 <h1 align="center">🏢 Smart Coworking Space Management System (SCMS)</h1>
