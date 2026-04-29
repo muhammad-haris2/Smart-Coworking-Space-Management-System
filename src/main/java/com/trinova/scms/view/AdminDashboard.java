@@ -191,11 +191,20 @@ public class AdminDashboard extends JFrame {
         styleTable(table);
 
         JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(0, 180, 216));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
         JButton cancelBtn = new JButton(
                 "Cancel Selected");
-        cancelBtn.setBackground(new Color(180, 30, 30));
+        cancelBtn.setBackground(new Color(239, 68, 68));
         cancelBtn.setForeground(Color.WHITE);
         cancelBtn.setFocusPainted(false);
+        cancelBtn.setOpaque(true);
+        cancelBtn.setContentAreaFilled(true);
+        cancelBtn.setBorderPainted(false);
 
         refreshBtn.addActionListener(e -> {
             model.setRowCount(0);
@@ -293,6 +302,12 @@ public class AdminDashboard extends JFrame {
         styleTable(table);
 
         JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(0, 180, 216));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
         refreshBtn.addActionListener(e -> {
             model.setRowCount(0);
             try {
@@ -356,15 +371,36 @@ public class AdminDashboard extends JFrame {
         styleTable(table);
 
         JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(0, 180, 216));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
         JButton addBtn = new JButton("Add New Space");
+        addBtn.setBackground(new Color(0, 180, 216));
+        addBtn.setForeground(Color.WHITE);
+        addBtn.setFocusPainted(false);
+        addBtn.setOpaque(true);
+        addBtn.setContentAreaFilled(true);
+        addBtn.setBorderPainted(false);
         JButton editBtn = new JButton(
                 "Edit Selected");
+        editBtn.setBackground(new Color(0, 150, 190));
+        editBtn.setForeground(Color.WHITE);
+        editBtn.setFocusPainted(false);
+        editBtn.setOpaque(true);
+        editBtn.setContentAreaFilled(true);
+        editBtn.setBorderPainted(false);
         JButton deactivateBtn = new JButton(
                 "Deactivate Selected");
         deactivateBtn.setBackground(
-                new Color(180, 30, 30));
+                new Color(239, 68, 68));
         deactivateBtn.setForeground(Color.WHITE);
         deactivateBtn.setFocusPainted(false);
+        deactivateBtn.setOpaque(true);
+        deactivateBtn.setContentAreaFilled(true);
+        deactivateBtn.setBorderPainted(false);
 
         refreshBtn.addActionListener(e -> {
             model.setRowCount(0);
@@ -550,9 +586,12 @@ public class AdminDashboard extends JFrame {
 
         JButton saveBtn = new JButton(
                 existing == null ? "Add Space" : "Save Changes");
-        saveBtn.setBackground(new Color(16, 64, 110));
+        saveBtn.setBackground(new Color(0, 180, 216));
         saveBtn.setForeground(Color.WHITE);
         saveBtn.setFocusPainted(false);
+        saveBtn.setOpaque(true);
+        saveBtn.setContentAreaFilled(true);
+        saveBtn.setBorderPainted(false);
         gbc.gridy = rows.length + 1;
         form.add(saveBtn, gbc);
 
@@ -643,11 +682,28 @@ public class AdminDashboard extends JFrame {
         styleTable(table);
 
         JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(0, 180, 216));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
         JButton addBtn = new JButton(
                 "Add Promo Code");
+        addBtn.setBackground(new Color(0, 180, 216));
+        addBtn.setForeground(Color.WHITE);
+        addBtn.setFocusPainted(false);
+        addBtn.setOpaque(true);
+        addBtn.setContentAreaFilled(true);
+        addBtn.setBorderPainted(false);
         JButton toggleBtn = new JButton(
                 "Toggle Active");
+        toggleBtn.setBackground(new Color(0, 150, 190));
+        toggleBtn.setForeground(Color.WHITE);
         toggleBtn.setFocusPainted(false);
+        toggleBtn.setOpaque(true);
+        toggleBtn.setContentAreaFilled(true);
+        toggleBtn.setBorderPainted(false);
 
         refreshBtn.addActionListener(e -> {
             model.setRowCount(0);
@@ -752,9 +808,12 @@ public class AdminDashboard extends JFrame {
         form.add(statusLbl, gbc);
 
         JButton saveBtn = new JButton("Add Code");
-        saveBtn.setBackground(new Color(16, 64, 110));
+        saveBtn.setBackground(new Color(0, 180, 216));
         saveBtn.setForeground(Color.WHITE);
         saveBtn.setFocusPainted(false);
+        saveBtn.setOpaque(true);
+        saveBtn.setContentAreaFilled(true);
+        saveBtn.setBorderPainted(false);
         gbc.gridy = 4;
         form.add(saveBtn, gbc);
 
@@ -827,9 +886,12 @@ public class AdminDashboard extends JFrame {
         // ── Generate Report button (populates table) ──
         JButton refreshBtn = new JButton(
                 "Generate Report");
-        refreshBtn.setBackground(new Color(16, 64, 110));
+        refreshBtn.setBackground(new Color(0, 180, 216));
         refreshBtn.setForeground(Color.WHITE);
         refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
 
         refreshBtn.addActionListener(e -> {
             model.setRowCount(0);
@@ -889,7 +951,7 @@ public class AdminDashboard extends JFrame {
 
         JButton downloadBtn = new JButton(
                 "Download Report");
-        downloadBtn.setBackground(new Color(128, 0, 128));
+        downloadBtn.setBackground(new Color(0, 180, 216));
         downloadBtn.setForeground(Color.WHITE);
         downloadBtn.setFocusPainted(false);
         downloadBtn.setOpaque(true);
@@ -1016,7 +1078,19 @@ public class AdminDashboard extends JFrame {
         searchPanel.add(new JLabel("Search by name:"));
         JTextField searchField = new JTextField(20);
         JButton searchBtn = new JButton("Search");
+        searchBtn.setBackground(new Color(0, 180, 216));
+        searchBtn.setForeground(Color.WHITE);
+        searchBtn.setFocusPainted(false);
+        searchBtn.setOpaque(true);
+        searchBtn.setContentAreaFilled(true);
+        searchBtn.setBorderPainted(false);
         JButton showAllBtn = new JButton("Show All");
+        showAllBtn.setBackground(new Color(0, 150, 190));
+        showAllBtn.setForeground(Color.WHITE);
+        showAllBtn.setFocusPainted(false);
+        showAllBtn.setOpaque(true);
+        showAllBtn.setContentAreaFilled(true);
+        showAllBtn.setBorderPainted(false);
         searchPanel.add(searchField);
         searchPanel.add(searchBtn);
         searchPanel.add(showAllBtn);
@@ -1029,9 +1103,20 @@ public class AdminDashboard extends JFrame {
         panel.add(topSection, BorderLayout.NORTH);
 
         JButton refreshBtn = new JButton("Refresh");
+        refreshBtn.setBackground(new Color(0, 180, 216));
+        refreshBtn.setForeground(Color.WHITE);
+        refreshBtn.setFocusPainted(false);
+        refreshBtn.setOpaque(true);
+        refreshBtn.setContentAreaFilled(true);
+        refreshBtn.setBorderPainted(false);
         JButton lockBtn = new JButton(
                 "Toggle Lock");
+        lockBtn.setBackground(new Color(239, 68, 68));
+        lockBtn.setForeground(Color.WHITE);
         lockBtn.setFocusPainted(false);
+        lockBtn.setOpaque(true);
+        lockBtn.setContentAreaFilled(true);
+        lockBtn.setBorderPainted(false);
 
         Runnable loadAll = () -> {
             model.setRowCount(0);
