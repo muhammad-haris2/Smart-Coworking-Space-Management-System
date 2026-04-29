@@ -14,65 +14,66 @@ import java.awt.geom.RoundRectangle2D;
  */
 public final class UITheme {
 
-    private UITheme() {}
+    private UITheme() {
+    }
 
     /* ── Colour Palette ────────────────────────────────────── */
     // Backgrounds
-    public static final Color BG_DARK        = new Color(13, 27, 42);    // #0D1B2A  sidebar / topbar
-    public static final Color BG_DARKER      = new Color(10, 20, 33);    // deepest
-    public static final Color BG_CONTENT     = new Color(241, 245, 249); // #F1F5F9  main area
-    public static final Color BG_CARD        = Color.WHITE;
-    public static final Color BG_CARD_ALT    = new Color(248, 250, 252);
+    public static final Color BG_DARK = new Color(13, 27, 42); // #0D1B2A sidebar / topbar
+    public static final Color BG_DARKER = new Color(10, 20, 33); // deepest
+    public static final Color BG_CONTENT = new Color(241, 245, 249); // #F1F5F9 main area
+    public static final Color BG_CARD = Color.WHITE;
+    public static final Color BG_CARD_ALT = new Color(248, 250, 252);
 
     // Admin-specific (purple accent for sidebar)
-    public static final Color ADMIN_DARK     = new Color(30, 15, 60);
-    public static final Color ADMIN_ACCENT   = new Color(139, 92, 246);  // violet-500
+    public static final Color ADMIN_DARK = new Color(30, 15, 60);
+    public static final Color ADMIN_ACCENT = new Color(139, 92, 246); // violet-500
 
     // Accents
-    public static final Color ACCENT         = new Color(0, 180, 216);   // teal #00B4D8
-    public static final Color ACCENT_DARK    = new Color(0, 150, 190);
-    public static final Color ACCENT_LIGHT   = new Color(202, 240, 248);
+    public static final Color ACCENT = new Color(0, 180, 216); // teal #00B4D8
+    public static final Color ACCENT_DARK = new Color(0, 150, 190);
+    public static final Color ACCENT_LIGHT = new Color(202, 240, 248);
 
     // Semantic
-    public static final Color SUCCESS        = new Color(16, 185, 129);  // emerald
-    public static final Color SUCCESS_BG     = new Color(220, 252, 231);
-    public static final Color DANGER         = new Color(239, 68, 68);   // red-500
-    public static final Color DANGER_BG      = new Color(254, 226, 226);
-    public static final Color WARNING        = new Color(245, 158, 11);  // amber
-    public static final Color WARNING_BG     = new Color(254, 243, 199);
+    public static final Color SUCCESS = new Color(16, 185, 129); // emerald
+    public static final Color SUCCESS_BG = new Color(220, 252, 231);
+    public static final Color DANGER = new Color(239, 68, 68); // red-500
+    public static final Color DANGER_BG = new Color(254, 226, 226);
+    public static final Color WARNING = new Color(245, 158, 11); // amber
+    public static final Color WARNING_BG = new Color(254, 243, 199);
 
     // Text
-    public static final Color TEXT_PRIMARY   = new Color(30, 41, 59);    // slate-800
+    public static final Color TEXT_PRIMARY = new Color(30, 41, 59); // slate-800
     public static final Color TEXT_SECONDARY = new Color(100, 116, 139); // slate-500
-    public static final Color TEXT_MUTED     = new Color(148, 163, 184); // slate-400
-    public static final Color TEXT_ON_DARK   = new Color(226, 232, 240); // slate-200
-    public static final Color TEXT_WHITE     = Color.WHITE;
+    public static final Color TEXT_MUTED = new Color(148, 163, 184); // slate-400
+    public static final Color TEXT_ON_DARK = new Color(226, 232, 240); // slate-200
+    public static final Color TEXT_WHITE = Color.WHITE;
 
     // Borders
-    public static final Color BORDER_LIGHT   = new Color(226, 232, 240); // slate-200
-    public static final Color BORDER_MEDIUM  = new Color(203, 213, 225); // slate-300
+    public static final Color BORDER_LIGHT = new Color(226, 232, 240); // slate-200
+    public static final Color BORDER_MEDIUM = new Color(203, 213, 225); // slate-300
 
     // Table
     public static final Color TABLE_HEADER_BG = new Color(30, 41, 59);
-    public static final Color TABLE_ROW_ALT   = new Color(248, 250, 252);
-    public static final Color TABLE_SELECTED  = new Color(224, 242, 254);
+    public static final Color TABLE_ROW_ALT = new Color(248, 250, 252);
+    public static final Color TABLE_SELECTED = new Color(224, 242, 254);
 
     /* ── Fonts ─────────────────────────────────────────────── */
-    public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD, 24);
+    public static final Font FONT_TITLE = new Font("Segoe UI", Font.BOLD, 24);
     public static final Font FONT_SUBTITLE = new Font("Segoe UI", Font.BOLD, 18);
-    public static final Font FONT_HEADING  = new Font("Segoe UI", Font.BOLD, 15);
-    public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 14);
-    public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 12);
-    public static final Font FONT_TINY     = new Font("Segoe UI", Font.PLAIN, 11);
-    public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD, 14);
-    public static final Font FONT_TABLE    = new Font("Segoe UI", Font.PLAIN, 13);
-    public static final Font FONT_TABLE_H  = new Font("Segoe UI", Font.BOLD, 13);
+    public static final Font FONT_HEADING = new Font("Segoe UI", Font.BOLD, 15);
+    public static final Font FONT_BODY = new Font("Segoe UI", Font.PLAIN, 14);
+    public static final Font FONT_SMALL = new Font("Segoe UI", Font.PLAIN, 12);
+    public static final Font FONT_TINY = new Font("Segoe UI", Font.PLAIN, 11);
+    public static final Font FONT_BTN = new Font("Segoe UI", Font.BOLD, 14);
+    public static final Font FONT_TABLE = new Font("Segoe UI", Font.PLAIN, 13);
+    public static final Font FONT_TABLE_H = new Font("Segoe UI", Font.BOLD, 13);
 
     /* ── Dimensions ────────────────────────────────────────── */
-    public static final int SIDEBAR_WIDTH  = 220;
-    public static final int TOPBAR_HEIGHT  = 56;
-    public static final int CARD_RADIUS    = 16;
-    public static final int BTN_HEIGHT     = 42;
+    public static final int SIDEBAR_WIDTH = 220;
+    public static final int TOPBAR_HEIGHT = 56;
+    public static final int CARD_RADIUS = 16;
+    public static final int BTN_HEIGHT = 42;
 
     /* ── Factory: Buttons ──────────────────────────────────── */
 
@@ -83,9 +84,9 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 GradientPaint gp = new GradientPaint(
-                    0, 0, ACCENT, getWidth(), getHeight(), ACCENT_DARK);
+                        0, 0, ACCENT, getWidth(), getHeight(), ACCENT_DARK);
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
                 g2.dispose();
@@ -110,7 +111,7 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(DANGER);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
                 g2.dispose();
@@ -149,8 +150,8 @@ public final class UITheme {
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(ACCENT, 1, true),
-            BorderFactory.createEmptyBorder(6, 16, 6, 16)));
+                BorderFactory.createLineBorder(ACCENT, 1, true),
+                BorderFactory.createEmptyBorder(6, 16, 6, 16)));
         return btn;
     }
 
@@ -163,8 +164,8 @@ public final class UITheme {
         f.setForeground(TEXT_PRIMARY);
         f.setCaretColor(ACCENT);
         f.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(BORDER_MEDIUM, 1, true),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                BorderFactory.createLineBorder(BORDER_MEDIUM, 1, true),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         f.setPreferredSize(new Dimension(0, 40));
         return f;
     }
@@ -176,8 +177,8 @@ public final class UITheme {
         f.setForeground(TEXT_PRIMARY);
         f.setCaretColor(ACCENT);
         f.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(BORDER_MEDIUM, 1, true),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                BorderFactory.createLineBorder(BORDER_MEDIUM, 1, true),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         f.setPreferredSize(new Dimension(0, 40));
         return f;
     }
@@ -210,7 +211,7 @@ public final class UITheme {
                     JTable t, Object value, boolean sel, boolean focus,
                     int row, int col) {
                 Component c = super.getTableCellRendererComponent(
-                    t, value, sel, focus, row, col);
+                        t, value, sel, focus, row, col);
                 if (!sel) {
                     c.setBackground(row % 2 == 0 ? BG_CARD : TABLE_ROW_ALT);
                 }
@@ -232,7 +233,7 @@ public final class UITheme {
                     JTable t, Object value, boolean sel, boolean focus,
                     int row, int col) {
                 JLabel l = (JLabel) super.getTableCellRendererComponent(
-                    t, value, sel, focus, row, col);
+                        t, value, sel, focus, row, col);
                 l.setBackground(TABLE_HEADER_BG);
                 l.setForeground(TEXT_WHITE);
                 l.setFont(FONT_TABLE_H);
@@ -259,10 +260,10 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(getBackground());
                 g2.fill(new RoundRectangle2D.Float(
-                    0, 0, getWidth(), getHeight(), CARD_RADIUS, CARD_RADIUS));
+                        0, 0, getWidth(), getHeight(), CARD_RADIUS, CARD_RADIUS));
                 g2.dispose();
             }
         };
@@ -288,7 +289,7 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setPaint(new GradientPaint(
-                    0, 0, BG_DARK, getWidth(), 0, new Color(20, 40, 70)));
+                        0, 0, BG_DARK, getWidth(), 0, new Color(20, 40, 70)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.dispose();
             }
@@ -306,7 +307,7 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setPaint(new GradientPaint(
-                    0, 0, ADMIN_DARK, getWidth(), 0, new Color(55, 30, 100)));
+                        0, 0, ADMIN_DARK, getWidth(), 0, new Color(55, 30, 100)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.dispose();
             }
@@ -335,18 +336,22 @@ public final class UITheme {
             {
                 addMouseListener(new java.awt.event.MouseAdapter() {
                     public void mouseEntered(java.awt.event.MouseEvent e) {
-                        hovered = true; repaint();
+                        hovered = true;
+                        repaint();
                     }
+
                     public void mouseExited(java.awt.event.MouseEvent e) {
-                        hovered = false; repaint();
+                        hovered = false;
+                        repaint();
                     }
                 });
             }
+
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 if (hovered) {
                     g2.setColor(new Color(255, 255, 255, 15));
                     g2.fillRoundRect(8, 2, getWidth() - 16, getHeight() - 4, 10, 10);
@@ -372,16 +377,16 @@ public final class UITheme {
     /* ── Factory: Stat Cards ───────────────────────────────── */
 
     public static JPanel statCard(String label, String value,
-                                   Color accentColor, String iconLetter) {
+            Color accentColor, String iconLetter) {
         JPanel card = new JPanel(new BorderLayout(12, 0)) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(getBackground());
                 g2.fill(new RoundRectangle2D.Float(
-                    0, 0, getWidth(), getHeight(), 16, 16));
+                        0, 0, getWidth(), getHeight(), 16, 16));
                 // accent left stripe
                 g2.setColor(accentColor);
                 g2.fillRoundRect(0, 0, 5, getHeight(), 5, 5);
@@ -395,21 +400,22 @@ public final class UITheme {
 
         // Painted circle icon with letter
         String letter = (iconLetter != null && !iconLetter.isEmpty())
-            ? iconLetter.substring(0, 1).toUpperCase() : "?";
+                ? iconLetter.substring(0, 1).toUpperCase()
+                : "?";
         JLabel iconLbl = new JLabel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(new Color(accentColor.getRed(), accentColor.getGreen(),
-                                      accentColor.getBlue(), 30));
+                        accentColor.getBlue(), 30));
                 g2.fillOval(0, 4, 40, 40);
                 g2.setColor(accentColor);
                 g2.setFont(new Font("Segoe UI", Font.BOLD, 18));
                 FontMetrics fm = g2.getFontMetrics();
                 g2.drawString(letter, (40 - fm.stringWidth(letter)) / 2,
-                    4 + (40 + fm.getAscent() - fm.getDescent()) / 2);
+                        4 + (40 + fm.getAscent() - fm.getDescent()) / 2);
                 g2.dispose();
             }
         };
@@ -449,9 +455,10 @@ public final class UITheme {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         bar.setBackground(BG_CONTENT);
         bar.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER_LIGHT),
-            BorderFactory.createEmptyBorder(4, 4, 4, 4)));
-        for (JButton b : buttons) bar.add(b);
+                BorderFactory.createMatteBorder(1, 0, 0, 0, BORDER_LIGHT),
+                BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+        for (JButton b : buttons)
+            bar.add(b);
         return bar;
     }
 
@@ -462,7 +469,8 @@ public final class UITheme {
         if (name != null && !name.isEmpty()) {
             String[] parts = name.trim().split("\\s+");
             initials = String.valueOf(parts[0].charAt(0));
-            if (parts.length > 1) initials += parts[parts.length - 1].charAt(0);
+            if (parts.length > 1)
+                initials += parts[parts.length - 1].charAt(0);
             initials = initials.toUpperCase();
         }
         String finalInitials = initials;
@@ -471,7 +479,7 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
+                        RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(bg);
                 g2.fillOval(0, 0, getWidth(), getHeight());
                 g2.setColor(Color.WHITE);
@@ -496,8 +504,8 @@ public final class UITheme {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setPaint(new GradientPaint(
-                    0, 0, BG_DARK,
-                    getWidth(), getHeight(), new Color(0, 60, 90)));
+                        0, 0, BG_DARK,
+                        getWidth(), getHeight(), new Color(0, 60, 90)));
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.dispose();
             }
@@ -514,8 +522,8 @@ public final class UITheme {
         btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(255, 255, 255, 60), 1, true),
-            BorderFactory.createEmptyBorder(6, 16, 6, 16)));
+                BorderFactory.createLineBorder(new Color(255, 255, 255, 60), 1, true),
+                BorderFactory.createEmptyBorder(6, 16, 6, 16)));
         btn.setContentAreaFilled(false);
         btn.setOpaque(false);
         return btn;
