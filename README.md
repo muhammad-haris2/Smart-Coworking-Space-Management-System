@@ -493,7 +493,25 @@ mvn test
 
 ## 📸 Screenshots
 
-> *Screenshots to be added.*
+<img width="764" height="900" alt="image" src="https://github.com/user-attachments/assets/d7f34d91-d211-482a-a1d0-a1f9a324fbe2" />
+<img width="1919" height="1004" alt="image" src="https://github.com/user-attachments/assets/fd67bf1c-b1e7-4800-bf16-2c2cff13515d" />
+<img width="1919" height="1007" alt="image" src="https://github.com/user-attachments/assets/6331f949-2a46-42bf-9887-fbc42a08b392" />
+<img width="1917" height="1007" alt="image" src="https://github.com/user-attachments/assets/ba7dc8d9-8f11-4cce-9ad3-4a664694f4f2" />
+<img width="1919" height="1011" alt="image" src="https://github.com/user-attachments/assets/b77d2591-95fa-491e-ae39-4abae59cd21e" />
+<img width="1919" height="1009" alt="image" src="https://github.com/user-attachments/assets/14f635d2-5f3f-4e3d-be08-a5cc768da8fb" />
+<img width="1919" height="1010" alt="image" src="https://github.com/user-attachments/assets/c10560ba-96fa-46cf-8cba-e11bc2332d24" />
+<img width="1917" height="1003" alt="image" src="https://github.com/user-attachments/assets/fea494f1-a0ac-496c-bbad-f2364e59ec3a" />
+<img width="1919" height="1006" alt="image" src="https://github.com/user-attachments/assets/b1a81e95-6f66-4e55-84de-21a04629a3f5" />
+<img width="1919" height="1009" alt="image" src="https://github.com/user-attachments/assets/94df51da-2b29-4f9e-acae-5b03a4544183" />
+
+
+
+
+
+
+
+
+
 
 | Screen | Description |
 |---|---|
